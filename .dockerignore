@@ -1,0 +1,57 @@
+# Git
+.git
+.gitignore
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual Environment
+venv/
+env/
+ENV/
+.venv/
+# IDE files
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Data directories that don't need to be in the image
+web_app/uploads/*
+web_app/results/*
+
+# Logs
+*.log
+
+# Docker
+Dockerfile
+docker-compose.yml
+.dockerignore
+
+examples/
+.venv/
+web_app/.venv/
+web_app/uploads/
+web_app/venv/
+web_app/venv_py310/
+web_app/results/
+web_app/app/uploads/

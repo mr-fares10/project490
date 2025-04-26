@@ -1,0 +1,933 @@
+import torch
+import cv2
+import numpy as np
+from PIL import Image
+import os
+import torchvision
+from torchvision import transforms
+import json
+from datetime import datetime
+import time
+
+# Check if CUDA is available and set device accordingly
+device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+print(f"Using device: {device}")
+
+# Load models with updated model names and error handling
+try:
+    # For newer torchvision versions, model names might have changed
+    try:
+        # Try the newest naming convention first
+        seg_model = torch.hub.load('pytorch/vision', 'maskrcnn_resnet50_fpn', weights='DEFAULT')
+    except Exception as e:
+        print(f"Trying alternate model name: {e}")
+        try:
+            # Try the alternate naming convention
+            seg_model = torch.hub.load('pytorch/vision:v0.10.0', 'maskrcnn_resnet50_fpn', pretrained=True)
+        except Exception as e:
+            print(f"Trying fallback method: {e}")
+            # Fallback to direct torchvision models import
+            seg_model = torchvision.models.detection.maskrcnn_resnet50_fpn(pretrained=True)
+
+    # Load MiDaS model
+    try:
+        depth_model = torch.hub.load('intel-isl/MiDaS', 'MiDaS_small')
+    except Exception as e:
+        print(f"Error loading MiDaS: {e}")
+        print("Attempting to load alternate MiDaS model...")
+        # Try alternate repository
+        depth_model = torch.hub.load('intel-isl/MiDaS', 'DPT_Hybrid')
+
+    # Move models to the appropriate device
+    seg_model.to(device)
+    depth_model.to(device)
+    # Set models to evaluation mode
+    seg_model.eval()
+    depth_model.eval()
+    print("Models loaded successfully!")
+except Exception as e:
+    print(f"Error loading models: {e}")
+    raise
+
+# Dictionary of common aviation camera specifications
+AVIATION_CAMERAS = {
+    # Professional cameras often used for aviation documentation
+    "Sony Alpha 7R IV": {
+        "sensor_width": 35.7,  # mm
+        "sensor_height": 23.8,  # mm
+        "resolution": (9504, 6336),  # pixels
+        "pixel_size": 0.00375,  # mm
+        "typical_focal_length": 85  # mm (common lens for aviation)
+    },
+    "Canon EOS 5D Mark IV": {
+        "sensor_width": 36.0,  # mm
+        "sensor_height": 24.0,  # mm
+        "resolution": (6720, 4480),  # pixels
+        "pixel_size": 0.00535,  # mm
+        "typical_focal_length": 100  # mm
+    },
+    "Nikon D850": {
+        "sensor_width": 35.9,  # mm
+        "sensor_height": 23.9,  # mm
+        "resolution": (8256, 5504),  # pixels
+        "pixel_size": 0.00435,  # mm
+        "typical_focal_length": 70  # mm
+    },
+    # Military-grade reconnaissance cameras
+    "MS-110 Reconnaissance Pod": {
+        "sensor_width": 49.2,  # mm (approximation)
+        "sensor_height": 36.8,  # mm
+        "resolution": (9000, 6000),  # pixels (approximation)
+        "pixel_size": 0.00546,  # mm
+        "typical_focal_length": 152  # mm
+    },
+    "SYERS-2 Sensor": {
+        "sensor_width": 55.0,  # mm (approximation)
+        "sensor_height": 41.0,  # mm
+        "resolution": (10000, 8000),  # pixels (approximation)
+        "pixel_size": 0.0055,  # mm
+        "typical_focal_length": 210  # mm
+    }
+}
+
+# Dictionary of fighter jet reference dimensions (in meters)
+FIGHTER_JET_DIMENSIONS = {
+    "F-16 Fighting Falcon": {
+        "length": 15.06,
+        "wingspan": 9.96,
+        "height": 5.09,
+        "empty_weight_kg": 8570
+    },
+    "F/A-18 Hornet": {
+        "length": 17.07,
+        "wingspan": 13.62,
+        "height": 4.66,
+        "empty_weight_kg": 10455
+    },
+    "F-22 Raptor": {
+        "length": 18.92,
+        "wingspan": 13.56,
+        "height": 5.08,
+        "empty_weight_kg": 19700
+    },
+    "F-35 Lightning II": {
+        "length": 15.67,
+        "wingspan": 10.7,
+        "height": 4.38,
+        "empty_weight_kg": 13290
+    },
+    "Su-27 Flanker": {
+        "length": 21.94,
+        "wingspan": 14.7,
+        "height": 5.93,
+        "empty_weight_kg": 16380
+    },
+    "MiG-29 Fulcrum": {
+        "length": 17.32,
+        "wingspan": 11.36,
+        "height": 4.73,
+        "empty_weight_kg": 11000
+    },
+    "Eurofighter Typhoon": {
+        "length": 15.96,
+        "wingspan": 10.95,
+        "height": 5.28,
+        "empty_weight_kg": 11000
+    },
+    "Rafale": {
+        "length": 15.27,
+        "wingspan": 10.8,
+        "height": 5.34,
+        "empty_weight_kg": 10000
+    },
+    "J-20": {
+        "length": 20.3,
+        "wingspan": 12.88,
+        "height": 4.45,
+        "empty_weight_kg": 17000
+    }
+}
+
+def calculate_camera_parameters(image_shape, camera_model="Sony Alpha 7R IV", focal_length_mm=None):
+    """
+    Calculate camera intrinsic parameters based on camera specifications
+
+    Parameters:
+    - image_shape: tuple of (height, width) of the image
+    - camera_model: string name of camera model from AVIATION_CAMERAS
+    - focal_length_mm: actual focal length in mm, if different from typical
+
+    Returns:
+    - dict with fx, fy (focal lengths in pixels), cx, cy (principal point)
+    """
+    if camera_model not in AVIATION_CAMERAS:
+        print(f"Warning: Camera model {camera_model} not found in database. Using default values.")
+        camera_model = "Sony Alpha 7R IV"  # Default to a common camera
+
+    camera_specs = AVIATION_CAMERAS[camera_model]
+
+    # Use provided focal length or typical value
+    actual_focal_length = focal_length_mm if focal_length_mm else camera_specs["typical_focal_length"]
+
+    # Calculate scaling factor if image resolution differs from camera's native resolution
+    width_scale = image_shape[1] / camera_specs["resolution"][0]
+    height_scale = image_shape[0] / camera_specs["resolution"][1]
+
+    # Convert focal length from mm to pixels
+    # Formula: focal_px = focal_mm / pixel_size_mm
+    focal_length_x_pixels = actual_focal_length / camera_specs["pixel_size"] * width_scale
+    focal_length_y_pixels = actual_focal_length / camera_specs["pixel_size"] * height_scale
+
+    # Principal point (usually center of image)
+    cx = image_shape[1] / 2
+    cy = image_shape[0] / 2
+
+    return {
+        "fx": focal_length_x_pixels,
+        "fy": focal_length_y_pixels,
+        "cx": cx,
+        "cy": cy,
+        "camera_model": camera_model,
+        "focal_length_mm": actual_focal_length
+    }
+
+def process_fighter_jet_image(image, frame_number=None, camera_model="Sony Alpha 7R IV", focal_length_mm=None,
+                             known_distance=None, known_jet_type=None, altitude=None, camera_angle=None):
+    """
+    Process a fighter jet image to extract dimensions and 3D coordinates in meters.
+
+    Parameters:
+    - image: CV2 image or path to image file
+    - frame_number: Frame number for video processing (optional)
+    - camera_model: Camera model used for the image
+    - focal_length_mm: Actual focal length in mm
+    - known_distance: Known distance to the aircraft in meters (if available)
+    - known_jet_type: Type of fighter jet if known (for dimension reference)
+    - altitude: Altitude of the camera in meters (if available)
+    - camera_angle: Angle of the camera relative to horizontal in degrees
+
+    Returns:
+    - Dictionary containing detection results and dimensions
+    """
+    # Handle the image input - either path or already loaded image
+    if isinstance(image, str):
+        if not os.path.exists(image):
+            raise FileNotFoundError(f"Image not found: {image}")
+        image = cv2.imread(image)
+        if image is None:
+            raise ValueError(f"Failed to load image: {image}")
+    
+    image_rgb = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+    original_height, original_width = image.shape[:2]
+
+    # Get camera parameters
+    camera_params = calculate_camera_parameters(
+        (original_height, original_width),
+        camera_model,
+        focal_length_mm
+    )
+
+    fx, fy = camera_params["fx"], camera_params["fy"]
+    cx, cy = camera_params["cx"], camera_params["cy"]
+
+    frame_info = f"Frame {frame_number}: " if frame_number is not None else ""
+    print(f"{frame_info}Image dimensions: {original_width}x{original_height}")
+    print(f"{frame_info}Camera: {camera_model}, Focal Length: {camera_params['focal_length_mm']}mm")
+    print(f"{frame_info}Camera parameters: fx={fx:.2f}, fy={fy:.2f}, cx={cx:.2f}, cy={cy:.2f}")
+
+    # Step 1: Object Segmentation with proper preprocessing
+    seg_tensor = transforms.ToTensor()(image_rgb).to(device)
+
+    # Run segmentation model
+    with torch.no_grad():
+        prediction = seg_model([seg_tensor])
+
+    # Check if any objects detected
+    scores = prediction[0]['scores']
+    if len(scores) == 0:
+        print(f"{frame_info}No objects detected in the image")
+        return None
+
+    # Filter predictions with confidence > 0.5
+    high_conf_indices = torch.where(scores > 0.5)[0]
+    if len(high_conf_indices) == 0:
+        print(f"{frame_info}No objects detected with confidence > 0.5")
+        return None
+
+    # Get COCO class names
+    COCO_INSTANCE_CATEGORY_NAMES = [
+        '__background__', 'person', 'bicycle', 'car', 'motorcycle', 'airplane', 'bus',
+        'train', 'truck', 'boat', 'traffic light', 'fire hydrant', 'N/A', 'stop sign',
+        'parking meter', 'bench', 'bird', 'cat', 'dog', 'horse', 'sheep', 'cow',
+        'elephant', 'bear', 'zebra', 'giraffe', 'N/A', 'backpack', 'umbrella', 'N/A', 'N/A',
+        'handbag', 'tie', 'suitcase', 'frisbee', 'skis', 'snowboard', 'sports ball',
+        'kite', 'baseball bat', 'baseball glove', 'skateboard', 'surfboard', 'tennis racket',
+        'bottle', 'N/A', 'wine glass', 'cup', 'fork', 'knife', 'spoon', 'bowl',
+        'banana', 'apple', 'sandwich', 'orange', 'broccoli', 'carrot', 'hot dog', 'pizza',
+        'donut', 'cake', 'chair', 'couch', 'potted plant', 'bed', 'N/A', 'dining table',
+        'N/A', 'N/A', 'toilet', 'N/A', 'tv', 'laptop', 'mouse', 'remote', 'keyboard', 'cell phone',
+        'microwave', 'oven', 'toaster', 'sink', 'refrigerator', 'N/A', 'book',
+        'clock', 'vase', 'scissors', 'teddy bear', 'hair drier', 'toothbrush'
+    ]
+
+    # Look for airplane class (index 4)
+    airplane_indices = [i for i in high_conf_indices if prediction[0]['labels'][i].item() == 4]
+
+    if airplane_indices:
+        # Prioritize airplane detections
+        best_idx = airplane_indices[0].item()
+        print(f"{frame_info}Fighter jet (airplane class) detected!")
+    else:
+        # If no airplane detected, use best detection
+        best_idx = high_conf_indices[0].item()
+        print(f"{frame_info}No fighter jet detected, using best available object")
+
+    mask = prediction[0]['masks'][best_idx, 0].cpu().numpy()
+    score = scores[best_idx].item()
+    label = prediction[0]['labels'][best_idx].item()
+    class_name = COCO_INSTANCE_CATEGORY_NAMES[label]
+
+    print(f"{frame_info}Detected {class_name} with confidence: {score:.2f}")
+
+    # Check if we actually found a fighter jet/airplane
+    if class_name != 'airplane' and known_jet_type:
+        print(f"{frame_info}Warning: Expected fighter jet but detected {class_name}")
+        print(f"{frame_info}Proceeding anyway with {known_jet_type} reference dimensions")
+
+    # Threshold mask
+    binary_mask = mask > 0.5
+    y_indices, x_indices = np.where(binary_mask)
+    if len(x_indices) == 0 or len(y_indices) == 0:
+        print(f"{frame_info}Segmentation mask is empty after thresholding")
+        return None
+
+    # Compute 2D centroid
+    u_centroid = np.mean(x_indices)
+    v_centroid = np.mean(y_indices)
+
+    # Compute object bounding box
+    min_x, max_x = np.min(x_indices), np.max(x_indices)
+    min_y, max_y = np.min(y_indices), np.max(y_indices)
+
+    # Extract key dimensions in pixels
+    width_px = max_x - min_x
+    height_px = max_y - min_y
+    diagonal_px = np.sqrt(width_px**2 + height_px**2)
+
+    # Compute the oriented bounding box to get more accurate aircraft dimensions
+    # This helps with aircraft at an angle
+    from cv2 import minAreaRect, boxPoints
+    points = np.column_stack((x_indices, y_indices))
+    rect = minAreaRect(points)
+    box = boxPoints(rect)
+    box = np.int0(box)
+
+    # Get rotated rectangle dimensions
+    rect_width, rect_height = rect[1]
+    rot_angle = rect[2]
+
+    # Ensure width is always the longer dimension for aircraft (length)
+    if rect_width < rect_height:
+        rect_width, rect_height = rect_height, rect_width
+        rot_angle = 90 - rot_angle
+
+    print(f"{frame_info}2D Centroid (u, v): ({u_centroid:.2f}, {v_centroid:.2f})")
+    print(f"{frame_info}Aircraft dimensions in pixels: {rect_width:.1f} × {rect_height:.1f}")
+    print(f"{frame_info}Aircraft orientation: {rot_angle:.1f} degrees")
+
+    # Visualize segmentation
+    visualization = image_rgb.copy()
+    # Draw mask overlay
+    mask_overlay = np.zeros_like(visualization)
+    mask_overlay[binary_mask, 0] = 255  # Red channel
+    mask_overlay = cv2.addWeighted(visualization, 1, mask_overlay, 0.5, 0)
+    # Draw centroid
+    cv2.circle(mask_overlay, (int(u_centroid), int(v_centroid)), 5, (0, 255, 0), -1)
+    # Draw oriented bounding box
+    cv2.drawContours(mask_overlay, [box], 0, (0, 255, 255), 2)
+
+    # Add measurement annotations
+    cv2.putText(mask_overlay, f"Length: {rect_width:.1f}px",
+                (int(min_x), int(min_y - 10)),
+                cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 255, 255), 2)
+    cv2.putText(mask_overlay, f"Width: {rect_height:.1f}px",
+                (int(min_x), int(min_y - 40)),
+                cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 255, 255), 2)
+
+    # Step 2: Depth Estimation with MiDaS preprocessing
+    depth_transform = transforms.Compose([
+        transforms.Resize((384, 384)),
+        transforms.ToTensor(),
+        transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
+    ])
+
+    # Convert and preprocess image
+    pil_image = Image.fromarray(image_rgb)
+    depth_input = depth_transform(pil_image).unsqueeze(0).to(device)
+
+    # Run depth model
+    with torch.no_grad():
+        depth_pred = depth_model(depth_input)
+
+    depth_map = depth_pred.squeeze().cpu().numpy()
+
+    # Normalize depth map for visualization
+    depth_vis = (depth_map - depth_map.min()) / (depth_map.max() - depth_map.min())
+    depth_vis = (depth_vis * 255).astype(np.uint8)
+    depth_vis = cv2.resize(depth_vis, (original_width, original_height), interpolation=cv2.INTER_CUBIC)
+
+    # Resize depth map to original image size for calculation
+    depth_map_resized = cv2.resize(depth_map, (original_width, original_height), interpolation=cv2.INTER_CUBIC)
+
+    # Extract depth for aircraft
+    aircraft_relative_depth = depth_map_resized[y_indices, x_indices].mean()
+
+    # Convert MiDaS relative depth to meters using calibration methods
+
+    # Method 1: If we know the actual distance
+    if known_distance is not None:
+        depth_scale_factor = known_distance / aircraft_relative_depth
+        aircraft_depth_meters = known_distance
+        print(f"{frame_info}Using known distance calibration: {known_distance:.2f}m")
+
+    # Method 2: If we know the aircraft type, use its dimensions for scale
+    elif known_jet_type is not None and known_jet_type in FIGHTER_JET_DIMENSIONS:
+        jet_specs = FIGHTER_JET_DIMENSIONS[known_jet_type]
+
+        # Use length (assuming forward-facing camera)
+        reference_length = jet_specs["length"]
+
+        # Calculate actual distance using pinhole camera model
+        # real_length / image_length = distance / focal_length
+        aircraft_depth_meters = (reference_length * fx) / rect_width
+        depth_scale_factor = aircraft_depth_meters / aircraft_relative_depth
+
+        print(f"{frame_info}Using {known_jet_type} reference dimensions for calibration")
+        print(f"{frame_info}Reference length: {reference_length:.2f}m")
+
+    # Method 3: If we have altitude information
+    elif altitude is not None and camera_angle is not None:
+        # Convert angle to radians
+        angle_rad = np.radians(camera_angle)
+
+        # Calculate distance using trigonometry
+        # distance = altitude / sin(angle)
+        aircraft_depth_meters = altitude / np.sin(angle_rad)
+        depth_scale_factor = aircraft_depth_meters / aircraft_relative_depth
+
+        print(f"{frame_info}Using altitude ({altitude:.2f}m) and camera angle ({camera_angle:.1f}°) for calibration")
+
+    # Method 4: Fallback to approximate scale based on typical aircraft
+    else:
+        # Use average fighter jet length (~17m) as reference
+        avg_fighter_length = 17.0
+
+        # Estimate distance
+        aircraft_depth_meters = (avg_fighter_length * fx) / rect_width
+        depth_scale_factor = aircraft_depth_meters / aircraft_relative_depth
+
+        print(f"{frame_info}Using average fighter jet dimensions for approximate calibration")
+        print(f"{frame_info}WARNING: For accurate measurements, provide known_distance or known_jet_type")
+
+    print(f"{frame_info}Estimated distance to aircraft: {aircraft_depth_meters:.2f} meters")
+
+    # Step 3: Calculate aircraft dimensions in meters
+    # Using the pinhole camera model: size_meters = (size_pixels * distance) / focal_length
+
+    # Calculate dimensions using oriented bounding box
+    length_meters = (rect_width * aircraft_depth_meters) / fx
+    wingspan_meters = (rect_height * aircraft_depth_meters) / fx
+
+    # Step 4: Convert 2D centroid to 3D coordinates in meters
+    x_meters = (u_centroid - cx) * aircraft_depth_meters / fx
+    y_meters = (v_centroid - cy) * aircraft_depth_meters / fy
+    z_meters = aircraft_depth_meters
+
+    # Determine aircraft type based on dimensions if not provided
+    estimated_type = None
+    if not known_jet_type:
+        best_match = None
+        smallest_diff = float('inf')
+
+        for jet_type, specs in FIGHTER_JET_DIMENSIONS.items():
+            # Calculate difference between estimated and reference dimensions
+            length_diff = abs(length_meters - specs["length"]) / specs["length"]
+            wingspan_diff = abs(wingspan_meters - specs["wingspan"]) / specs["wingspan"]
+
+            # Combined difference score (weighted more on length as it's usually more accurate)
+            total_diff = length_diff * 0.6 + wingspan_diff * 0.4
+
+            if total_diff < smallest_diff and total_diff < 0.25:  # Within 25% of reference
+                smallest_diff = total_diff
+                best_match = jet_type
+
+        if best_match:
+            estimated_type = best_match
+            print(f"{frame_info}Aircraft dimensions match {estimated_type} (confidence: {(1-smallest_diff)*100:.1f}%)")
+
+    # Create detailed results
+    result = {
+        "frame": frame_number,
+        "detection": {
+            "class": class_name,
+            "confidence": score,
+            "2d_centroid_px": (u_centroid, v_centroid),
+            "3d_position_meters": (x_meters, y_meters, z_meters),
+            "distance_meters": aircraft_depth_meters,
+            "orientation_degrees": rot_angle
+        },
+        "dimensions": {
+            "length_px": rect_width,
+            "wingspan_px": rect_height,
+            "length_meters": length_meters,
+            "wingspan_meters": wingspan_meters,
+            "aspect_ratio": rect_width / rect_height if rect_height > 0 else 0
+        },
+        "aircraft": {
+            "type": known_jet_type if known_jet_type else estimated_type,
+            "estimated_type": estimated_type if not known_jet_type else None,
+        },
+        "camera": {
+            "model": camera_model,
+            "focal_length_mm": camera_params["focal_length_mm"],
+            "fx_px": fx,
+            "fy_px": fy
+        },
+        "calibration": {
+            "depth_scale_factor": depth_scale_factor,
+            "calibration_method": "known_distance" if known_distance else
+                                "known_aircraft_type" if known_jet_type else
+                                "altitude_angle" if altitude and camera_angle else
+                                "approximate"
+        },
+        "visualizations": {
+            "segmentation": mask_overlay,
+            "depth": depth_vis
+        },
+        "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    }
+
+    # If we have a reference aircraft, compare our measurements
+    if known_jet_type and known_jet_type in FIGHTER_JET_DIMENSIONS:
+        jet_specs = FIGHTER_JET_DIMENSIONS[known_jet_type]
+        result["reference"] = {
+            "length_meters": jet_specs["length"],
+            "wingspan_meters": jet_specs["wingspan"],
+            "height_meters": jet_specs["height"],
+            "length_error_pct": abs(length_meters - jet_specs["length"]) / jet_specs["length"] * 100,
+            "wingspan_error_pct": abs(wingspan_meters - jet_specs["wingspan"]) / jet_specs["wingspan"] * 100
+        }
+
+    return result
+
+def save_results(result, output_dir="./output", prefix="frame"):
+    """Save detection results and visualizations to disk"""
+    if not os.path.exists(output_dir):
+        os.makedirs(output_dir)
+
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    frame_num = result.get("frame", "")
+    
+    if frame_num != "":
+        frame_prefix = f"{prefix}_{frame_num:04d}"
+    else:
+        frame_prefix = f"{prefix}_{timestamp}"
+
+    # Save visualizations
+    cv2.imwrite(f"{output_dir}/{frame_prefix}_segmentation.jpg",
+                cv2.cvtColor(result["visualizations"]["segmentation"], cv2.COLOR_RGB2BGR))
+    cv2.imwrite(f"{output_dir}/{frame_prefix}_depth.jpg",
+                result["visualizations"]["depth"])
+
+    # Save metadata and measurements
+    result_copy = result.copy()
+    # Remove visualizations from JSON (too large)
+    del result_copy["visualizations"]
+
+    with open(f"{output_dir}/{frame_prefix}_data.json", 'w') as f:
+        json.dump(result_copy, f, indent=2)
+
+    return {
+        "segmentation": f"{output_dir}/{frame_prefix}_segmentation.jpg",
+        "depth": f"{output_dir}/{frame_prefix}_depth.jpg",
+        "data": f"{output_dir}/{frame_prefix}_data.json"
+    }
+
+def process_video(video_path, output_dir="./output", camera_model="Sony Alpha 7R IV", 
+                 focal_length_mm=None, known_jet_type=None, known_distance=None, 
+                 altitude=None, camera_angle=None, fps=60, use_original_fps=True):
+    """
+    Process a video by extracting frames at specified fps and analyzing each frame
+    
+    Parameters:
+    - video_path: Path to video file
+    - output_dir: Directory to save output files
+    - camera_model: Camera model used to capture the video
+    - focal_length_mm: Focal length in mm
+    - known_jet_type: Type of fighter jet if known
+    - known_distance: Known distance to aircraft in meters (if available)
+    - altitude: Altitude of camera in meters (if available)
+    - camera_angle: Angle of camera relative to horizontal in degrees
+    - fps: Frames per second to extract (default: 60 frames per second)
+    - use_original_fps: If True, use the original video's fps instead of the specified fps
+    
+    Returns:
+    - List of results for each processed frame
+    """
+    if not os.path.exists(output_dir):
+        os.makedirs(output_dir)
+        
+    # Open the video file
+    cap = cv2.VideoCapture(video_path)
+    if not cap.isOpened():
+        raise ValueError(f"Error opening video file: {video_path}")
+    
+    # Get video properties
+    video_fps = cap.get(cv2.CAP_PROP_FPS)
+    total_frames = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
+    duration = total_frames / video_fps
+    
+    print(f"Video loaded: {video_path}")
+    print(f"Duration: {duration:.2f} seconds ({total_frames} frames at {video_fps:.2f} fps)")
+    print(f"Processing at {fps} frame(s) per second")
+    
+    # Determine the frame rate to use for processing
+    if use_original_fps:
+        processing_fps = video_fps
+        print(f"Using original video frame rate: {video_fps} fps")
+    else:
+        processing_fps = fps
+        print(f"Using specified frame rate: {fps} fps")
+    
+    # Calculate frame interval for extraction
+    frame_interval = int(video_fps / processing_fps)
+    if frame_interval < 1:
+        frame_interval = 1
+        print(f"Warning: Requested FPS ({processing_fps}) is higher than video FPS ({video_fps}). Processing every frame.")
+    
+    # Create trajectory data file to store positions over time
+    trajectory_file = os.path.join(output_dir, "trajectory_data.csv")
+    with open(trajectory_file, 'w') as f:
+        f.write("frame,timestamp,x_meters,y_meters,z_meters,detected_class,confidence,orientation_degrees\n")
+    
+    results = []
+    frame_count = 0
+    processed_count = 0
+    
+    # Need to process first frame to get dimensions
+    ret, first_frame = cap.read()
+    if not ret:
+        raise ValueError("Could not read the first frame of the video")
+    
+    height, width = first_frame.shape[:2]
+    
+    # Reset the video to the beginning
+    cap.set(cv2.CAP_PROP_POS_FRAMES, 0)
+    
+    # Create output videos for different visualization types
+    fourcc = cv2.VideoWriter_fourcc(*'mp4v')
+    output_fps = min(processing_fps, video_fps)  # Use the lower of the two to ensure smooth playback
+    
+    # Create separate videos for each visualization type
+    main_video_path = os.path.join(output_dir, "annotated_video.mp4")
+    segmentation_video_path = os.path.join(output_dir, "segmentation_video.mp4")
+    depth_video_path = os.path.join(output_dir, "depth_video.mp4")
+    
+    main_video = cv2.VideoWriter(main_video_path, fourcc, output_fps, (width, height))
+    segmentation_video = cv2.VideoWriter(segmentation_video_path, fourcc, output_fps, (width, height))
+    depth_video = cv2.VideoWriter(depth_video_path, fourcc, output_fps, (width, height))
+    
+    # Reset the video to the beginning
+    cap.set(cv2.CAP_PROP_POS_FRAMES, 0)
+    
+    start_time = time.time()
+    
+    try:
+        while True:
+            ret, frame = cap.read()
+            if not ret:
+                break  # End of video
+                
+            # Process only frames at the specified interval
+            if frame_count % frame_interval == 0:
+                print(f"\nProcessing frame {frame_count} ({frame_count/video_fps:.2f} seconds into video)")
+                
+                # Process the frame
+                result = process_fighter_jet_image(
+                    frame, 
+                    frame_number=processed_count,
+                    camera_model=camera_model,
+                    focal_length_mm=focal_length_mm,
+                    known_jet_type=known_jet_type,
+                    known_distance=known_distance,
+                    altitude=altitude,
+                    camera_angle=camera_angle
+                )
+                
+                if result:
+                    # Save the results
+                    saved_paths = save_results(result, output_dir, prefix="frame")
+                    results.append(result)
+                    
+                    # Add to trajectory data
+                    x, y, z = result["detection"]["3d_position_meters"]
+                    with open(trajectory_file, 'a') as f:
+                        f.write(f"{processed_count},{result['timestamp']},{x:.2f},{y:.2f},{z:.2f}," +
+                                f"{result['detection']['class']},{result['detection']['confidence']:.3f}," +
+                                f"{result['detection']['orientation_degrees']:.1f}\n")
+                    
+                    # Add annotations to the frame for the output video
+                    annotated_frame = result["visualizations"]["segmentation"].copy()
+                    
+                    # Add 3D position information
+                    cv2.putText(annotated_frame, 
+                               f"Position (m): X={x:.2f}, Y={y:.2f}, Z={z:.2f}", 
+                               (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 255, 0), 2)
+                    
+                    # Add detection confidence
+                    cv2.putText(annotated_frame, 
+                               f"Confidence: {result['detection']['confidence']:.2f}", 
+                               (10, 60), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 255, 0), 2)
+                    
+                    # Add frame number
+                    cv2.putText(annotated_frame, 
+                               f"Frame: {processed_count} (Time: {frame_count/video_fps:.2f}s)", 
+                               (10, 90), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 255, 0), 2)
+                    
+                    # Convert RGB to BGR for OpenCV
+                    annotated_frame_bgr = cv2.cvtColor(annotated_frame, cv2.COLOR_RGB2BGR)
+                    depth_frame_bgr = cv2.cvtColor(result["visualizations"]["depth"], cv2.COLOR_GRAY2BGR)
+                    segmentation_frame_bgr = cv2.cvtColor(result["visualizations"]["segmentation"], cv2.COLOR_RGB2BGR)
+                    
+                    # Write frames to respective videos
+                    main_video.write(annotated_frame_bgr)
+                    segmentation_video.write(segmentation_frame_bgr)
+                    depth_video.write(depth_frame_bgr)
+                    
+                else:
+                    # If no detection, still write the frame to output videos but with a message
+                    no_detection_frame = frame.copy()
+                    cv2.putText(no_detection_frame, 
+                               "No detection in this frame", 
+                               (width//4, height//2), 
+                               cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
+                    
+                    # Create blank frames for segmentation and depth videos
+                    blank_segmentation = np.zeros_like(frame)
+                    cv2.putText(blank_segmentation, 
+                               "No detection in this frame", 
+                               (width//4, height//2), 
+                               cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
+                    
+                    blank_depth = np.zeros_like(frame)
+                    cv2.putText(blank_depth, 
+                               "No detection in this frame", 
+                               (width//4, height//2), 
+                               cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
+                    
+                    # Write blank frames to videos
+                    main_video.write(no_detection_frame)
+                    segmentation_video.write(blank_segmentation)
+                    depth_video.write(blank_depth)
+                
+                processed_count += 1
+                
+                # Print progress
+                elapsed_time = time.time() - start_time
+                frames_remaining = total_frames - frame_count
+                frames_per_second = (processed_count + 1) / elapsed_time if elapsed_time > 0 else 0
+                estimated_time = frames_remaining / video_fps / fps * (elapsed_time / (processed_count + 1)) if processed_count > 0 else 0
+                
+                print(f"Processed {processed_count} frames. " +
+                      f"Estimated time remaining: {estimated_time/60:.1f} minutes")
+                
+            frame_count += 1
+            
+    except Exception as e:
+        print(f"Error processing video: {e}")
+        import traceback
+        traceback.print_exc()
+    finally:
+        # Release resources
+        cap.release()
+        main_video.release()
+        segmentation_video.release()
+        depth_video.release()
+        
+    print(f"\nVideo processing complete!")
+    print(f"Processed {processed_count} frames from {total_frames} total frames")
+    print(f"Results saved to: {output_dir}")
+    print(f"Trajectory data saved to: {trajectory_file}")
+    print(f"Output videos:")
+    print(f"- Main annotated video: {main_video_path}")
+    print(f"- Segmentation video: {segmentation_video_path}")
+    print(f"- Depth map video: {depth_video_path}")
+    
+    return results
+
+def create_trajectory_visualization(trajectory_file, output_dir):
+    """
+    Create visualization of aircraft trajectory from the saved trajectory data
+    
+    Parameters:
+    - trajectory_file: Path to CSV file with trajectory data
+    - output_dir: Directory to save visualization
+    """
+    import pandas as pd
+    import matplotlib.pyplot as plt
+    from mpl_toolkits.mplot3d import Axes3D
+    
+    # Read trajectory data
+    try:
+        df = pd.read_csv(trajectory_file)
+        
+        if len(df) < 2:
+            print("Not enough points for trajectory visualization")
+            return
+            
+        # Create 3D plot
+        fig = plt.figure(figsize=(12, 8))
+        ax = fig.add_subplot(111, projection='3d')
+        
+        # Plot trajectory
+        ax.plot(df['x_meters'], df['y_meters'], df['z_meters'], 'b-', linewidth=2)
+        ax.scatter(df['x_meters'], df['y_meters'], df['z_meters'], c='r', s=50)
+        
+        # Add frame numbers
+        for i, row in df.iterrows():
+            ax.text(row['x_meters'], row['y_meters'], row['z_meters'], 
+                   f"{int(row['frame'])}", color='black', fontsize=8)
+        
+        # Set labels
+        ax.set_xlabel('X (meters)')
+        ax.set_ylabel('Y (meters)')
+        ax.set_zlabel('Z (meters)')
+        ax.set_title('Aircraft 3D Trajectory')
+        
+        # Save figure
+        plt.savefig(os.path.join(output_dir, "trajectory_3d.png"), dpi=300, bbox_inches='tight')
+        plt.close()
+        
+        # Create 2D plots (top-down, side views)
+        fig, axs = plt.subplots(1, 3, figsize=(18, 6))
+        
+        # Top-down view (X-Y)
+        axs[0].plot(df['x_meters'], df['y_meters'], 'b-', linewidth=2)
+        axs[0].scatter(df['x_meters'], df['y_meters'], c='r', s=50)
+        axs[0].set_xlabel('X (meters)')
+        axs[0].set_ylabel('Y (meters)')
+        axs[0].set_title('Top-Down View')
+        axs[0].grid(True)
+        
+        # Side view (X-Z)
+        axs[1].plot(df['x_meters'], df['z_meters'], 'b-', linewidth=2)
+        axs[1].scatter(df['x_meters'], df['z_meters'], c='r', s=50)
+        axs[1].set_xlabel('X (meters)')
+        axs[1].set_ylabel('Z (meters)')
+        axs[1].set_title('Side View (X-Z)')
+        axs[1].grid(True)
+        
+        # Side view (Y-Z)
+        axs[2].plot(df['y_meters'], df['z_meters'], 'b-', linewidth=2)
+        axs[2].scatter(df['y_meters'], df['z_meters'], c='r', s=50)
+        axs[2].set_xlabel('Y (meters)')
+        axs[2].set_ylabel('Z (meters)')
+        axs[2].set_title('Side View (Y-Z)')
+        axs[2].grid(True)
+        
+        plt.tight_layout()
+        plt.savefig(os.path.join(output_dir, "trajectory_2d_views.png"), dpi=300, bbox_inches='tight')
+        plt.close()
+        
+        print(f"Trajectory visualizations saved to {output_dir}")
+        
+    except Exception as e:
+        print(f"Error creating trajectory visualization: {e}")
+        import traceback
+        traceback.print_exc()
+
+# Main execution
+if __name__ == "__main__":
+    try:
+        # Path to your fighter jet video
+        video_path = "/content/fighter_jet_video.mp4"  # Replace with your video path
+        output_dir = "./output"
+        
+        # Process video at 60 fps or original video frame rate
+        results = process_video(
+            video_path=video_path,
+            output_dir=output_dir,
+            camera_model="Sony Alpha 7R IV",
+            focal_length_mm=200,  # Common telephoto lens for aviation photography
+            known_jet_type="F-16 Fighting Falcon",  # Replace with specific jet type if known
+            fps=60,  # Target 60 fps processing
+            use_original_fps=True  # Use the video's original frame rate instead
+        )
+        
+        # Create trajectory visualization after processing
+        if results:
+            create_trajectory_visualization(
+                os.path.join(output_dir, "/content/firstjetvideo.mp4"),
+                output_dir
+            )
+            
+            # Generate summary statistics
+            print("\nSummary Statistics:")
+            
+            # Calculate average distance
+            distances = [r["detection"]["distance_meters"] for r in results]
+            avg_distance = sum(distances) / len(distances)
+            min_distance = min(distances)
+            max_distance = max(distances)
+            
+            print(f"Average distance to aircraft: {avg_distance:.2f} meters")
+            print(f"Minimum distance: {min_distance:.2f} meters")
+            print(f"Maximum distance: {max_distance:.2f} meters")
+            
+            # Most confident detection
+            confidences = [r["detection"]["confidence"] for r in results]
+            max_conf_idx = confidences.index(max(confidences))
+            max_conf_frame = results[max_conf_idx]["frame"]
+            
+            print(f"Most confident detection: Frame {max_conf_frame} ({max(confidences):.3f})")
+            
+            # Save summary to file
+            with open(os.path.join(output_dir, "processing_summary.txt"), 'w') as f:
+                f.write("FIGHTER JET VIDEO PROCESSING SUMMARY\n")
+                f.write("===================================\n\n")
+                f.write(f"Video processed on: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n")
+                f.write(f"Total frames processed: {len(results)}\n")
+                f.write(f"Aircraft type: {results[0]['aircraft']['type'] if results[0]['aircraft']['type'] else 'Unknown'}\n\n")
+                
+                f.write("DISTANCE STATISTICS\n")
+                f.write(f"Average distance: {avg_distance:.2f} meters\n")
+                f.write(f"Minimum distance: {min_distance:.2f} meters\n")
+                f.write(f"Maximum distance: {max_distance:.2f} meters\n\n")
+                
+                f.write("DETECTION STATISTICS\n")
+                f.write(f"Most confident detection: Frame {max_conf_frame} ({max(confidences):.3f})\n")
+        
+    except Exception as e:
+        print(f"Error in main execution: {e}")
+        import traceback
+        traceback.print_exc()
+# Process at the video's native frame rate (recommended)
+results = process_video(
+    video_path="/content/firstjetvideo.mp4",
+    output_dir="./output",
+    camera_model="Sony Alpha 7R IV",
+    focal_length_mm=200,
+    known_jet_type="F-16 Fighting Falcon",
+    use_original_fps=True  # Use the video's native frame rate
+)
+
+# OR force a specific frame rate (e.g., 60 fps)
+results = process_video(
+    video_path="/content/firstjetvideo.mp4",
+    output_dir="./output",
+    camera_model="Sony Alpha 7R IV",
+    focal_length_mm=200,
+    known_jet_type="F-16 Fighting Falcon",
+    fps=60,
+    use_original_fps=False  # Override with the specified fps
+)

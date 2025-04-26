@@ -1,0 +1,13 @@
+services:
+  fighter-jet-app:
+    build: .
+    container_name: fighter-jet-prediction
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./web_app/uploads:/app/web_app/uploads
+      - ./web_app/results:/app/web_app/results
+      - ./examples:/app/examples
+    environment:
+      - PYTHONUNBUFFERED=1
+    restart: unless-stopped

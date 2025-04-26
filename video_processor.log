@@ -1,0 +1,1661 @@
+2025-04-23 11:29:01,831 - app.video_processor - INFO - Using device: cpu
+2025-04-23 11:29:01,941 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://10.169.18.142:5000
+2025-04-23 11:29:01,941 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2025-04-23 11:29:01,949 - werkzeug - INFO -  * Restarting with stat
+2025-04-23 11:29:37,170 - app.video_processor - INFO - Using device: cpu
+2025-04-23 11:29:37,255 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://10.169.18.142:5000
+2025-04-23 11:29:37,258 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2025-04-23 11:29:37,262 - werkzeug - INFO -  * Restarting with stat
+2025-04-23 11:29:52,402 - app.video_processor - INFO - Using device: cpu
+2025-04-23 11:29:52,432 - werkzeug - WARNING -  * Debugger is active!
+2025-04-23 11:29:52,456 - werkzeug - INFO -  * Debugger PIN: 120-859-130
+2025-04-23 11:29:52,954 - werkzeug - INFO - 127.0.0.1 - - [23/Apr/2025 11:29:52] "GET / HTTP/1.1" 200 -
+2025-04-23 11:29:53,766 - werkzeug - INFO - 127.0.0.1 - - [23/Apr/2025 11:29:53] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2025-04-23 11:30:13,916 - app.video_processor - INFO - Initializing VideoProcessor with: video_path=c:\Users\hadif\pojectt\project490\web_app\uploads\71bc9e29-ecd0-4abd-9f45-7af7d1764eef\firstjetvideo.mp4, model_path=c:\Users\hadif\pojectt\project490\web_app\uploads\71bc9e29-ecd0-4abd-9f45-7af7d1764eef\jet_lstm_model.pt
+2025-04-23 11:30:13,922 - app.video_processor - INFO - Loading object detection model...
+2025-04-23 11:30:15,952 - app.video_processor - INFO - Object detection model loaded successfully
+2025-04-23 11:30:15,954 - app.video_processor - INFO - Loading LSTM model from c:\Users\hadif\pojectt\project490\web_app\uploads\71bc9e29-ecd0-4abd-9f45-7af7d1764eef\jet_lstm_model.pt...
+2025-04-23 11:30:15,994 - app.video_processor - WARNING - Could not load with weights_only=True: Weights only load failed. This file can still be loaded, to do so you have two options, [1mdo those steps only if you trust the source of the checkpoint[0m. 
+	(1) In PyTorch 2.6, we changed the default value of the `weights_only` argument in `torch.load` from `False` to `True`. Re-running `torch.load` with `weights_only` set to `False` will likely succeed, but it can result in arbitrary code execution. Do it only if you got the file from a trusted source.
+	(2) Alternatively, to load with `weights_only=True` please check the recommended steps in the following error message.
+	WeightsUnpickler error: Unsupported global: GLOBAL numpy._core.multiarray._reconstruct was not an allowed global by default. Please use `torch.serialization.add_safe_globals([_reconstruct])` or the `torch.serialization.safe_globals([_reconstruct])` context manager to allowlist this global if you trust this class/function.
+
+Check the documentation of torch.load to learn more about types accepted by default with weights_only https://pytorch.org/docs/stable/generated/torch.load.html.
+2025-04-23 11:30:15,994 - app.video_processor - INFO - Attempting to load with weights_only=False
+2025-04-23 11:30:16,027 - app.video_processor - INFO - Loading model from state_dict
+2025-04-23 11:30:16,031 - app.video_processor - ERROR - Error initializing models: Error(s) in loading state_dict for LSTMPredictor:
+	size mismatch for lstm.weight_ih_l0: copying a param with shape torch.Size([40, 3]) from checkpoint, the shape in current model is torch.Size([256, 3]).
+	size mismatch for lstm.weight_hh_l0: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([256, 64]).
+	size mismatch for lstm.bias_ih_l0: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([256]).
+	size mismatch for lstm.bias_hh_l0: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([256]).
+	size mismatch for lstm.weight_ih_l1: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([256, 64]).
+	size mismatch for lstm.weight_hh_l1: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([256, 64]).
+	size mismatch for lstm.bias_ih_l1: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([256]).
+	size mismatch for lstm.bias_hh_l1: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([256]).
+	size mismatch for fc.weight: copying a param with shape torch.Size([3, 10]) from checkpoint, the shape in current model is torch.Size([3, 64]).
+2025-04-23 11:30:16,093 - app.video_processor - ERROR - Traceback (most recent call last):
+  File "c:\Users\hadif\pojectt\project490\web_app\app\video_processor.py", line 616, in _init_model
+    self.lstm_model.load_state_dict(checkpoint['model_state_dict'])
+  File "C:\Users\hadif\pojectt\project490\.venv\lib\site-packages\torch\nn\modules\module.py", line 2581, in load_state_dict
+    raise RuntimeError(
+RuntimeError: Error(s) in loading state_dict for LSTMPredictor:
+	size mismatch for lstm.weight_ih_l0: copying a param with shape torch.Size([40, 3]) from checkpoint, the shape in current model is torch.Size([256, 3]).
+	size mismatch for lstm.weight_hh_l0: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([256, 64]).
+	size mismatch for lstm.bias_ih_l0: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([256]).
+	size mismatch for lstm.bias_hh_l0: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([256]).
+	size mismatch for lstm.weight_ih_l1: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([256, 64]).
+	size mismatch for lstm.weight_hh_l1: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([256, 64]).
+	size mismatch for lstm.bias_ih_l1: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([256]).
+	size mismatch for lstm.bias_hh_l1: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([256]).
+	size mismatch for fc.weight: copying a param with shape torch.Size([3, 10]) from checkpoint, the shape in current model is torch.Size([3, 64]).
+
+2025-04-23 11:30:16,097 - app.video_processor - ERROR - Error during initialization: Error(s) in loading state_dict for LSTMPredictor:
+	size mismatch for lstm.weight_ih_l0: copying a param with shape torch.Size([40, 3]) from checkpoint, the shape in current model is torch.Size([256, 3]).
+	size mismatch for lstm.weight_hh_l0: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([256, 64]).
+	size mismatch for lstm.bias_ih_l0: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([256]).
+	size mismatch for lstm.bias_hh_l0: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([256]).
+	size mismatch for lstm.weight_ih_l1: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([256, 64]).
+	size mismatch for lstm.weight_hh_l1: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([256, 64]).
+	size mismatch for lstm.bias_ih_l1: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([256]).
+	size mismatch for lstm.bias_hh_l1: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([256]).
+	size mismatch for fc.weight: copying a param with shape torch.Size([3, 10]) from checkpoint, the shape in current model is torch.Size([3, 64]).
+2025-04-23 11:30:16,099 - app.video_processor - ERROR - Traceback (most recent call last):
+  File "c:\Users\hadif\pojectt\project490\web_app\app\video_processor.py", line 581, in __init__
+    self._init_model()
+  File "c:\Users\hadif\pojectt\project490\web_app\app\video_processor.py", line 616, in _init_model
+    self.lstm_model.load_state_dict(checkpoint['model_state_dict'])
+  File "C:\Users\hadif\pojectt\project490\.venv\lib\site-packages\torch\nn\modules\module.py", line 2581, in load_state_dict
+    raise RuntimeError(
+RuntimeError: Error(s) in loading state_dict for LSTMPredictor:
+	size mismatch for lstm.weight_ih_l0: copying a param with shape torch.Size([40, 3]) from checkpoint, the shape in current model is torch.Size([256, 3]).
+	size mismatch for lstm.weight_hh_l0: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([256, 64]).
+	size mismatch for lstm.bias_ih_l0: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([256]).
+	size mismatch for lstm.bias_hh_l0: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([256]).
+	size mismatch for lstm.weight_ih_l1: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([256, 64]).
+	size mismatch for lstm.weight_hh_l1: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([256, 64]).
+	size mismatch for lstm.bias_ih_l1: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([256]).
+	size mismatch for lstm.bias_hh_l1: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([256]).
+	size mismatch for fc.weight: copying a param with shape torch.Size([3, 10]) from checkpoint, the shape in current model is torch.Size([3, 64]).
+
+2025-04-23 11:30:16,206 - werkzeug - INFO - 127.0.0.1 - - [23/Apr/2025 11:30:16] "[35m[1mPOST /upload HTTP/1.1[0m" 500 -
+2025-04-23 11:31:00,007 - werkzeug - INFO -  * Detected change in 'c:\\Users\\hadif\\pojectt\\project490\\web_app\\scripts\\generate_test_model.py', reloading
+2025-04-23 11:31:01,510 - werkzeug - INFO -  * Restarting with stat
+2025-04-23 11:31:16,075 - app.video_processor - INFO - Using device: cpu
+2025-04-23 11:31:16,104 - werkzeug - WARNING -  * Debugger is active!
+2025-04-23 11:31:16,119 - werkzeug - INFO -  * Debugger PIN: 120-859-130
+2025-04-23 11:32:16,662 - app.video_processor - INFO - Using device: cpu
+2025-04-23 11:32:16,725 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://10.169.18.142:5000
+2025-04-23 11:32:16,725 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2025-04-23 11:32:16,729 - werkzeug - INFO -  * Restarting with stat
+2025-04-23 11:32:31,815 - app.video_processor - INFO - Using device: cpu
+2025-04-23 11:32:31,849 - werkzeug - WARNING -  * Debugger is active!
+2025-04-23 11:32:31,873 - werkzeug - INFO -  * Debugger PIN: 120-859-130
+2025-04-23 11:32:32,313 - werkzeug - INFO - 127.0.0.1 - - [23/Apr/2025 11:32:32] "GET / HTTP/1.1" 200 -
+2025-04-23 11:32:52,172 - app.video_processor - INFO - Initializing VideoProcessor with: video_path=c:\Users\hadif\pojectt\project490\web_app\uploads\d5d23aa2-7943-4278-820f-ef6d7175341a\firstjetvideo.mp4, model_path=c:\Users\hadif\pojectt\project490\web_app\uploads\d5d23aa2-7943-4278-820f-ef6d7175341a\test_lstm_model.pt
+2025-04-23 11:32:52,175 - app.video_processor - INFO - Loading object detection model...
+2025-04-23 11:32:53,997 - app.video_processor - INFO - Object detection model loaded successfully
+2025-04-23 11:32:53,999 - app.video_processor - INFO - Loading LSTM model from c:\Users\hadif\pojectt\project490\web_app\uploads\d5d23aa2-7943-4278-820f-ef6d7175341a\test_lstm_model.pt...
+2025-04-23 11:32:54,030 - app.video_processor - INFO - Loaded model with weights_only=True
+2025-04-23 11:32:54,030 - app.video_processor - INFO - Loading model from state_dict
+2025-04-23 11:32:54,037 - app.video_processor - ERROR - Error initializing models: Error(s) in loading state_dict for LSTMPredictor:
+	size mismatch for lstm.weight_ih_l0: copying a param with shape torch.Size([40, 3]) from checkpoint, the shape in current model is torch.Size([256, 3]).
+	size mismatch for lstm.weight_hh_l0: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([256, 64]).
+	size mismatch for lstm.bias_ih_l0: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([256]).
+	size mismatch for lstm.bias_hh_l0: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([256]).
+	size mismatch for lstm.weight_ih_l1: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([256, 64]).
+	size mismatch for lstm.weight_hh_l1: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([256, 64]).
+	size mismatch for lstm.bias_ih_l1: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([256]).
+	size mismatch for lstm.bias_hh_l1: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([256]).
+	size mismatch for fc.weight: copying a param with shape torch.Size([3, 10]) from checkpoint, the shape in current model is torch.Size([3, 64]).
+2025-04-23 11:32:54,039 - app.video_processor - ERROR - Traceback (most recent call last):
+  File "c:\Users\hadif\pojectt\project490\web_app\app\video_processor.py", line 616, in _init_model
+    self.lstm_model.load_state_dict(checkpoint['model_state_dict'])
+  File "C:\Users\hadif\pojectt\project490\.venv\lib\site-packages\torch\nn\modules\module.py", line 2581, in load_state_dict
+    raise RuntimeError(
+RuntimeError: Error(s) in loading state_dict for LSTMPredictor:
+	size mismatch for lstm.weight_ih_l0: copying a param with shape torch.Size([40, 3]) from checkpoint, the shape in current model is torch.Size([256, 3]).
+	size mismatch for lstm.weight_hh_l0: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([256, 64]).
+	size mismatch for lstm.bias_ih_l0: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([256]).
+	size mismatch for lstm.bias_hh_l0: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([256]).
+	size mismatch for lstm.weight_ih_l1: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([256, 64]).
+	size mismatch for lstm.weight_hh_l1: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([256, 64]).
+	size mismatch for lstm.bias_ih_l1: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([256]).
+	size mismatch for lstm.bias_hh_l1: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([256]).
+	size mismatch for fc.weight: copying a param with shape torch.Size([3, 10]) from checkpoint, the shape in current model is torch.Size([3, 64]).
+
+2025-04-23 11:32:54,039 - app.video_processor - ERROR - Error during initialization: Error(s) in loading state_dict for LSTMPredictor:
+	size mismatch for lstm.weight_ih_l0: copying a param with shape torch.Size([40, 3]) from checkpoint, the shape in current model is torch.Size([256, 3]).
+	size mismatch for lstm.weight_hh_l0: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([256, 64]).
+	size mismatch for lstm.bias_ih_l0: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([256]).
+	size mismatch for lstm.bias_hh_l0: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([256]).
+	size mismatch for lstm.weight_ih_l1: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([256, 64]).
+	size mismatch for lstm.weight_hh_l1: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([256, 64]).
+	size mismatch for lstm.bias_ih_l1: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([256]).
+	size mismatch for lstm.bias_hh_l1: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([256]).
+	size mismatch for fc.weight: copying a param with shape torch.Size([3, 10]) from checkpoint, the shape in current model is torch.Size([3, 64]).
+2025-04-23 11:32:54,039 - app.video_processor - ERROR - Traceback (most recent call last):
+  File "c:\Users\hadif\pojectt\project490\web_app\app\video_processor.py", line 581, in __init__
+    self._init_model()
+  File "c:\Users\hadif\pojectt\project490\web_app\app\video_processor.py", line 616, in _init_model
+    self.lstm_model.load_state_dict(checkpoint['model_state_dict'])
+  File "C:\Users\hadif\pojectt\project490\.venv\lib\site-packages\torch\nn\modules\module.py", line 2581, in load_state_dict
+    raise RuntimeError(
+RuntimeError: Error(s) in loading state_dict for LSTMPredictor:
+	size mismatch for lstm.weight_ih_l0: copying a param with shape torch.Size([40, 3]) from checkpoint, the shape in current model is torch.Size([256, 3]).
+	size mismatch for lstm.weight_hh_l0: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([256, 64]).
+	size mismatch for lstm.bias_ih_l0: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([256]).
+	size mismatch for lstm.bias_hh_l0: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([256]).
+	size mismatch for lstm.weight_ih_l1: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([256, 64]).
+	size mismatch for lstm.weight_hh_l1: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([256, 64]).
+	size mismatch for lstm.bias_ih_l1: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([256]).
+	size mismatch for lstm.bias_hh_l1: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([256]).
+	size mismatch for fc.weight: copying a param with shape torch.Size([3, 10]) from checkpoint, the shape in current model is torch.Size([3, 64]).
+
+2025-04-23 11:32:54,095 - werkzeug - INFO - 127.0.0.1 - - [23/Apr/2025 11:32:54] "[35m[1mPOST /upload HTTP/1.1[0m" 500 -
+2025-04-23 11:43:59,208 - app.video_processor - INFO - Using device: cpu
+2025-04-23 11:43:59,286 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://10.169.18.142:5000
+2025-04-23 11:43:59,286 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2025-04-23 11:43:59,290 - werkzeug - INFO -  * Restarting with stat
+2025-04-23 11:44:13,738 - app.video_processor - INFO - Using device: cpu
+2025-04-23 11:44:13,783 - werkzeug - WARNING -  * Debugger is active!
+2025-04-23 11:44:13,796 - werkzeug - INFO -  * Debugger PIN: 120-859-130
+2025-04-23 11:55:49,577 - app.video_processor - INFO - Using device: cpu
+2025-04-23 11:55:49,645 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://10.169.18.142:5000
+2025-04-23 11:55:49,645 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2025-04-23 11:55:49,650 - werkzeug - INFO -  * Restarting with stat
+2025-04-23 11:56:04,393 - app.video_processor - INFO - Using device: cpu
+2025-04-23 11:56:04,473 - werkzeug - WARNING -  * Debugger is active!
+2025-04-23 11:56:04,485 - werkzeug - INFO -  * Debugger PIN: 120-859-130
+2025-04-23 11:56:04,880 - werkzeug - INFO - 127.0.0.1 - - [23/Apr/2025 11:56:04] "GET / HTTP/1.1" 200 -
+2025-04-23 11:56:05,104 - werkzeug - INFO - 127.0.0.1 - - [23/Apr/2025 11:56:05] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2025-04-23 11:56:23,938 - app.video_processor - INFO - Initializing VideoProcessor with: video_path=c:\Users\hadif\pojectt\project490\web_app\uploads\4b7f4854-aa6b-4219-97d8-392d9026d8a5\firstjetvideo.mp4, model_path=c:\Users\hadif\pojectt\project490\web_app\uploads\4b7f4854-aa6b-4219-97d8-392d9026d8a5\jet_lstm_model.pt
+2025-04-23 11:56:23,938 - app.video_processor - INFO - Loading object detection model...
+2025-04-23 11:56:25,400 - app.video_processor - INFO - Object detection model loaded successfully
+2025-04-23 11:56:25,400 - app.video_processor - INFO - Loading LSTM model from c:\Users\hadif\pojectt\project490\web_app\uploads\4b7f4854-aa6b-4219-97d8-392d9026d8a5\jet_lstm_model.pt...
+2025-04-23 11:56:25,433 - app.video_processor - WARNING - Could not load with weights_only=True: Weights only load failed. This file can still be loaded, to do so you have two options, [1mdo those steps only if you trust the source of the checkpoint[0m. 
+	(1) In PyTorch 2.6, we changed the default value of the `weights_only` argument in `torch.load` from `False` to `True`. Re-running `torch.load` with `weights_only` set to `False` will likely succeed, but it can result in arbitrary code execution. Do it only if you got the file from a trusted source.
+	(2) Alternatively, to load with `weights_only=True` please check the recommended steps in the following error message.
+	WeightsUnpickler error: Unsupported global: GLOBAL numpy._core.multiarray._reconstruct was not an allowed global by default. Please use `torch.serialization.add_safe_globals([_reconstruct])` or the `torch.serialization.safe_globals([_reconstruct])` context manager to allowlist this global if you trust this class/function.
+
+Check the documentation of torch.load to learn more about types accepted by default with weights_only https://pytorch.org/docs/stable/generated/torch.load.html.
+2025-04-23 11:56:25,433 - app.video_processor - INFO - Attempting to load with weights_only=False
+2025-04-23 11:56:25,446 - app.video_processor - INFO - Loading model from state_dict
+2025-04-23 11:56:25,449 - app.video_processor - ERROR - Error initializing models: Error(s) in loading state_dict for LSTMPredictor:
+	size mismatch for lstm.weight_ih_l0: copying a param with shape torch.Size([40, 3]) from checkpoint, the shape in current model is torch.Size([256, 3]).
+	size mismatch for lstm.weight_hh_l0: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([256, 64]).
+	size mismatch for lstm.bias_ih_l0: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([256]).
+	size mismatch for lstm.bias_hh_l0: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([256]).
+	size mismatch for lstm.weight_ih_l1: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([256, 64]).
+	size mismatch for lstm.weight_hh_l1: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([256, 64]).
+	size mismatch for lstm.bias_ih_l1: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([256]).
+	size mismatch for lstm.bias_hh_l1: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([256]).
+	size mismatch for fc.weight: copying a param with shape torch.Size([3, 10]) from checkpoint, the shape in current model is torch.Size([3, 64]).
+2025-04-23 11:56:25,455 - app.video_processor - ERROR - Traceback (most recent call last):
+  File "c:\Users\hadif\pojectt\project490\web_app\app\video_processor.py", line 616, in _init_model
+    self.lstm_model.load_state_dict(checkpoint['model_state_dict'])
+  File "C:\Users\hadif\pojectt\project490\.venv\lib\site-packages\torch\nn\modules\module.py", line 2581, in load_state_dict
+    raise RuntimeError(
+RuntimeError: Error(s) in loading state_dict for LSTMPredictor:
+	size mismatch for lstm.weight_ih_l0: copying a param with shape torch.Size([40, 3]) from checkpoint, the shape in current model is torch.Size([256, 3]).
+	size mismatch for lstm.weight_hh_l0: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([256, 64]).
+	size mismatch for lstm.bias_ih_l0: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([256]).
+	size mismatch for lstm.bias_hh_l0: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([256]).
+	size mismatch for lstm.weight_ih_l1: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([256, 64]).
+	size mismatch for lstm.weight_hh_l1: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([256, 64]).
+	size mismatch for lstm.bias_ih_l1: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([256]).
+	size mismatch for lstm.bias_hh_l1: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([256]).
+	size mismatch for fc.weight: copying a param with shape torch.Size([3, 10]) from checkpoint, the shape in current model is torch.Size([3, 64]).
+
+2025-04-23 11:56:25,455 - app.video_processor - ERROR - Error during initialization: Error(s) in loading state_dict for LSTMPredictor:
+	size mismatch for lstm.weight_ih_l0: copying a param with shape torch.Size([40, 3]) from checkpoint, the shape in current model is torch.Size([256, 3]).
+	size mismatch for lstm.weight_hh_l0: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([256, 64]).
+	size mismatch for lstm.bias_ih_l0: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([256]).
+	size mismatch for lstm.bias_hh_l0: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([256]).
+	size mismatch for lstm.weight_ih_l1: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([256, 64]).
+	size mismatch for lstm.weight_hh_l1: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([256, 64]).
+	size mismatch for lstm.bias_ih_l1: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([256]).
+	size mismatch for lstm.bias_hh_l1: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([256]).
+	size mismatch for fc.weight: copying a param with shape torch.Size([3, 10]) from checkpoint, the shape in current model is torch.Size([3, 64]).
+2025-04-23 11:56:25,455 - app.video_processor - ERROR - Traceback (most recent call last):
+  File "c:\Users\hadif\pojectt\project490\web_app\app\video_processor.py", line 581, in __init__
+    self._init_model()
+  File "c:\Users\hadif\pojectt\project490\web_app\app\video_processor.py", line 616, in _init_model
+    self.lstm_model.load_state_dict(checkpoint['model_state_dict'])
+  File "C:\Users\hadif\pojectt\project490\.venv\lib\site-packages\torch\nn\modules\module.py", line 2581, in load_state_dict
+    raise RuntimeError(
+RuntimeError: Error(s) in loading state_dict for LSTMPredictor:
+	size mismatch for lstm.weight_ih_l0: copying a param with shape torch.Size([40, 3]) from checkpoint, the shape in current model is torch.Size([256, 3]).
+	size mismatch for lstm.weight_hh_l0: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([256, 64]).
+	size mismatch for lstm.bias_ih_l0: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([256]).
+	size mismatch for lstm.bias_hh_l0: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([256]).
+	size mismatch for lstm.weight_ih_l1: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([256, 64]).
+	size mismatch for lstm.weight_hh_l1: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([256, 64]).
+	size mismatch for lstm.bias_ih_l1: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([256]).
+	size mismatch for lstm.bias_hh_l1: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([256]).
+	size mismatch for fc.weight: copying a param with shape torch.Size([3, 10]) from checkpoint, the shape in current model is torch.Size([3, 64]).
+
+2025-04-23 11:56:25,500 - werkzeug - INFO - 127.0.0.1 - - [23/Apr/2025 11:56:25] "[35m[1mPOST /upload HTTP/1.1[0m" 500 -
+2025-04-23 11:59:11,677 - werkzeug - INFO -  * Detected change in 'c:\\Users\\hadif\\pojectt\\project490\\web_app\\scripts\\generate_test_model.py', reloading
+2025-04-23 11:59:13,272 - werkzeug - INFO -  * Restarting with stat
+2025-04-23 11:59:26,567 - app.video_processor - INFO - Using device: cpu
+2025-04-23 11:59:26,594 - werkzeug - WARNING -  * Debugger is active!
+2025-04-23 11:59:26,605 - werkzeug - INFO -  * Debugger PIN: 120-859-130
+2025-04-23 11:59:56,961 - werkzeug - INFO -  * Detected change in 'c:\\Users\\hadif\\pojectt\\project490\\web_app\\app\\video_processor.py', reloading
+2025-04-23 11:59:58,210 - werkzeug - INFO -  * Restarting with stat
+2025-04-23 12:00:11,866 - app.video_processor - INFO - Using device: cpu
+2025-04-23 12:00:11,898 - werkzeug - WARNING -  * Debugger is active!
+2025-04-23 12:00:11,900 - werkzeug - INFO -  * Debugger PIN: 120-859-130
+2025-04-23 12:01:01,595 - app.video_processor - INFO - Using device: cpu
+2025-04-23 12:01:01,685 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://10.169.18.142:5000
+2025-04-23 12:01:01,687 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2025-04-23 12:01:01,692 - werkzeug - INFO -  * Restarting with stat
+2025-04-23 12:01:15,439 - app.video_processor - INFO - Using device: cpu
+2025-04-23 12:01:15,488 - werkzeug - WARNING -  * Debugger is active!
+2025-04-23 12:01:15,500 - werkzeug - INFO -  * Debugger PIN: 120-859-130
+2025-04-23 12:01:15,878 - werkzeug - INFO - 127.0.0.1 - - [23/Apr/2025 12:01:15] "GET / HTTP/1.1" 200 -
+2025-04-23 12:01:34,565 - app.video_processor - INFO - Initializing VideoProcessor with: video_path=c:\Users\hadif\pojectt\project490\web_app\uploads\bce62e7c-6fe3-493a-9789-55e4e9255158\firstjetvideo.mp4, model_path=c:\Users\hadif\pojectt\project490\web_app\uploads\bce62e7c-6fe3-493a-9789-55e4e9255158\jet_lstm_model.pt
+2025-04-23 12:01:34,573 - app.video_processor - INFO - Loading object detection model...
+2025-04-23 12:01:36,009 - app.video_processor - INFO - Object detection model loaded successfully
+2025-04-23 12:01:36,009 - app.video_processor - INFO - Loading LSTM model from c:\Users\hadif\pojectt\project490\web_app\uploads\bce62e7c-6fe3-493a-9789-55e4e9255158\jet_lstm_model.pt...
+2025-04-23 12:01:36,069 - app.video_processor - ERROR - Error initializing models: Weights only load failed. This file can still be loaded, to do so you have two options, [1mdo those steps only if you trust the source of the checkpoint[0m. 
+	(1) In PyTorch 2.6, we changed the default value of the `weights_only` argument in `torch.load` from `False` to `True`. Re-running `torch.load` with `weights_only` set to `False` will likely succeed, but it can result in arbitrary code execution. Do it only if you got the file from a trusted source.
+	(2) Alternatively, to load with `weights_only=True` please check the recommended steps in the following error message.
+	WeightsUnpickler error: Unsupported global: GLOBAL numpy._core.multiarray._reconstruct was not an allowed global by default. Please use `torch.serialization.add_safe_globals([_reconstruct])` or the `torch.serialization.safe_globals([_reconstruct])` context manager to allowlist this global if you trust this class/function.
+
+Check the documentation of torch.load to learn more about types accepted by default with weights_only https://pytorch.org/docs/stable/generated/torch.load.html.
+2025-04-23 12:01:36,075 - app.video_processor - ERROR - Traceback (most recent call last):
+  File "c:\Users\hadif\pojectt\project490\web_app\app\video_processor.py", line 631, in _init_model
+    checkpoint = torch.load(self.model_path, map_location=device)
+  File "C:\Users\hadif\pojectt\project490\.venv\lib\site-packages\torch\serialization.py", line 1470, in load
+    raise pickle.UnpicklingError(_get_wo_message(str(e))) from None
+_pickle.UnpicklingError: Weights only load failed. This file can still be loaded, to do so you have two options, [1mdo those steps only if you trust the source of the checkpoint[0m. 
+	(1) In PyTorch 2.6, we changed the default value of the `weights_only` argument in `torch.load` from `False` to `True`. Re-running `torch.load` with `weights_only` set to `False` will likely succeed, but it can result in arbitrary code execution. Do it only if you got the file from a trusted source.
+	(2) Alternatively, to load with `weights_only=True` please check the recommended steps in the following error message.
+	WeightsUnpickler error: Unsupported global: GLOBAL numpy._core.multiarray._reconstruct was not an allowed global by default. Please use `torch.serialization.add_safe_globals([_reconstruct])` or the `torch.serialization.safe_globals([_reconstruct])` context manager to allowlist this global if you trust this class/function.
+
+Check the documentation of torch.load to learn more about types accepted by default with weights_only https://pytorch.org/docs/stable/generated/torch.load.html.
+
+2025-04-23 12:01:36,077 - app.video_processor - ERROR - Error initializing models: Error during initialization: Weights only load failed. This file can still be loaded, to do so you have two options, [1mdo those steps only if you trust the source of the checkpoint[0m. 
+	(1) In PyTorch 2.6, we changed the default value of the `weights_only` argument in `torch.load` from `False` to `True`. Re-running `torch.load` with `weights_only` set to `False` will likely succeed, but it can result in arbitrary code execution. Do it only if you got the file from a trusted source.
+	(2) Alternatively, to load with `weights_only=True` please check the recommended steps in the following error message.
+	WeightsUnpickler error: Unsupported global: GLOBAL numpy._core.multiarray._reconstruct was not an allowed global by default. Please use `torch.serialization.add_safe_globals([_reconstruct])` or the `torch.serialization.safe_globals([_reconstruct])` context manager to allowlist this global if you trust this class/function.
+
+Check the documentation of torch.load to learn more about types accepted by default with weights_only https://pytorch.org/docs/stable/generated/torch.load.html.
+2025-04-23 12:01:36,079 - app.video_processor - ERROR - Traceback (most recent call last):
+  File "c:\Users\hadif\pojectt\project490\web_app\app\video_processor.py", line 631, in _init_model
+    checkpoint = torch.load(self.model_path, map_location=device)
+  File "C:\Users\hadif\pojectt\project490\.venv\lib\site-packages\torch\serialization.py", line 1470, in load
+    raise pickle.UnpicklingError(_get_wo_message(str(e))) from None
+_pickle.UnpicklingError: Weights only load failed. This file can still be loaded, to do so you have two options, [1mdo those steps only if you trust the source of the checkpoint[0m. 
+	(1) In PyTorch 2.6, we changed the default value of the `weights_only` argument in `torch.load` from `False` to `True`. Re-running `torch.load` with `weights_only` set to `False` will likely succeed, but it can result in arbitrary code execution. Do it only if you got the file from a trusted source.
+	(2) Alternatively, to load with `weights_only=True` please check the recommended steps in the following error message.
+	WeightsUnpickler error: Unsupported global: GLOBAL numpy._core.multiarray._reconstruct was not an allowed global by default. Please use `torch.serialization.add_safe_globals([_reconstruct])` or the `torch.serialization.safe_globals([_reconstruct])` context manager to allowlist this global if you trust this class/function.
+
+Check the documentation of torch.load to learn more about types accepted by default with weights_only https://pytorch.org/docs/stable/generated/torch.load.html.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "c:\Users\hadif\pojectt\project490\web_app\app\video_processor.py", line 646, in _init_model
+    raise RuntimeError(f"Error during initialization: {str(e)}")
+RuntimeError: Error during initialization: Weights only load failed. This file can still be loaded, to do so you have two options, [1mdo those steps only if you trust the source of the checkpoint[0m. 
+	(1) In PyTorch 2.6, we changed the default value of the `weights_only` argument in `torch.load` from `False` to `True`. Re-running `torch.load` with `weights_only` set to `False` will likely succeed, but it can result in arbitrary code execution. Do it only if you got the file from a trusted source.
+	(2) Alternatively, to load with `weights_only=True` please check the recommended steps in the following error message.
+	WeightsUnpickler error: Unsupported global: GLOBAL numpy._core.multiarray._reconstruct was not an allowed global by default. Please use `torch.serialization.add_safe_globals([_reconstruct])` or the `torch.serialization.safe_globals([_reconstruct])` context manager to allowlist this global if you trust this class/function.
+
+Check the documentation of torch.load to learn more about types accepted by default with weights_only https://pytorch.org/docs/stable/generated/torch.load.html.
+
+2025-04-23 12:01:36,080 - app.video_processor - ERROR - Error during initialization: Error during initialization: Weights only load failed. This file can still be loaded, to do so you have two options, [1mdo those steps only if you trust the source of the checkpoint[0m. 
+	(1) In PyTorch 2.6, we changed the default value of the `weights_only` argument in `torch.load` from `False` to `True`. Re-running `torch.load` with `weights_only` set to `False` will likely succeed, but it can result in arbitrary code execution. Do it only if you got the file from a trusted source.
+	(2) Alternatively, to load with `weights_only=True` please check the recommended steps in the following error message.
+	WeightsUnpickler error: Unsupported global: GLOBAL numpy._core.multiarray._reconstruct was not an allowed global by default. Please use `torch.serialization.add_safe_globals([_reconstruct])` or the `torch.serialization.safe_globals([_reconstruct])` context manager to allowlist this global if you trust this class/function.
+
+Check the documentation of torch.load to learn more about types accepted by default with weights_only https://pytorch.org/docs/stable/generated/torch.load.html.
+2025-04-23 12:01:36,083 - app.video_processor - ERROR - Traceback (most recent call last):
+  File "c:\Users\hadif\pojectt\project490\web_app\app\video_processor.py", line 631, in _init_model
+    checkpoint = torch.load(self.model_path, map_location=device)
+  File "C:\Users\hadif\pojectt\project490\.venv\lib\site-packages\torch\serialization.py", line 1470, in load
+    raise pickle.UnpicklingError(_get_wo_message(str(e))) from None
+_pickle.UnpicklingError: Weights only load failed. This file can still be loaded, to do so you have two options, [1mdo those steps only if you trust the source of the checkpoint[0m. 
+	(1) In PyTorch 2.6, we changed the default value of the `weights_only` argument in `torch.load` from `False` to `True`. Re-running `torch.load` with `weights_only` set to `False` will likely succeed, but it can result in arbitrary code execution. Do it only if you got the file from a trusted source.
+	(2) Alternatively, to load with `weights_only=True` please check the recommended steps in the following error message.
+	WeightsUnpickler error: Unsupported global: GLOBAL numpy._core.multiarray._reconstruct was not an allowed global by default. Please use `torch.serialization.add_safe_globals([_reconstruct])` or the `torch.serialization.safe_globals([_reconstruct])` context manager to allowlist this global if you trust this class/function.
+
+Check the documentation of torch.load to learn more about types accepted by default with weights_only https://pytorch.org/docs/stable/generated/torch.load.html.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "c:\Users\hadif\pojectt\project490\web_app\app\video_processor.py", line 603, in __init__
+    self._init_model()
+  File "c:\Users\hadif\pojectt\project490\web_app\app\video_processor.py", line 646, in _init_model
+    raise RuntimeError(f"Error during initialization: {str(e)}")
+RuntimeError: Error during initialization: Weights only load failed. This file can still be loaded, to do so you have two options, [1mdo those steps only if you trust the source of the checkpoint[0m. 
+	(1) In PyTorch 2.6, we changed the default value of the `weights_only` argument in `torch.load` from `False` to `True`. Re-running `torch.load` with `weights_only` set to `False` will likely succeed, but it can result in arbitrary code execution. Do it only if you got the file from a trusted source.
+	(2) Alternatively, to load with `weights_only=True` please check the recommended steps in the following error message.
+	WeightsUnpickler error: Unsupported global: GLOBAL numpy._core.multiarray._reconstruct was not an allowed global by default. Please use `torch.serialization.add_safe_globals([_reconstruct])` or the `torch.serialization.safe_globals([_reconstruct])` context manager to allowlist this global if you trust this class/function.
+
+Check the documentation of torch.load to learn more about types accepted by default with weights_only https://pytorch.org/docs/stable/generated/torch.load.html.
+
+2025-04-23 12:01:36,175 - werkzeug - INFO - 127.0.0.1 - - [23/Apr/2025 12:01:36] "[35m[1mPOST /upload HTTP/1.1[0m" 500 -
+2025-04-23 12:06:27,524 - app.video_processor - INFO - Using device: cpu
+2025-04-23 12:06:27,600 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://10.169.18.142:5000
+2025-04-23 12:06:27,600 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2025-04-23 12:06:27,604 - werkzeug - INFO -  * Restarting with stat
+2025-04-23 12:06:39,422 - app.video_processor - INFO - Using device: cpu
+2025-04-23 12:06:39,458 - werkzeug - WARNING -  * Debugger is active!
+2025-04-23 12:06:39,475 - werkzeug - INFO -  * Debugger PIN: 120-859-130
+2025-04-23 12:07:09,091 - werkzeug - INFO - 127.0.0.1 - - [23/Apr/2025 12:07:09] "GET / HTTP/1.1" 200 -
+2025-04-23 12:07:14,608 - werkzeug - INFO - 127.0.0.1 - - [23/Apr/2025 12:07:14] "GET / HTTP/1.1" 200 -
+2025-04-23 12:07:39,236 - app.video_processor - INFO - Initializing VideoProcessor with: video_path=c:\Users\hadif\pojectt\project490\web_app\uploads\d25daa35-d2c9-444b-8b58-00d625c0e696\firstjetvideo.mp4, model_path=c:\Users\hadif\pojectt\project490\web_app\uploads\d25daa35-d2c9-444b-8b58-00d625c0e696\jet_lstm_model.pt
+2025-04-23 12:07:39,239 - app.video_processor - INFO - Loading object detection model...
+2025-04-23 12:07:40,597 - app.video_processor - INFO - Object detection model loaded successfully
+2025-04-23 12:07:40,597 - app.video_processor - INFO - Loading LSTM model from c:\Users\hadif\pojectt\project490\web_app\uploads\d25daa35-d2c9-444b-8b58-00d625c0e696\jet_lstm_model.pt...
+2025-04-23 12:07:40,638 - app.video_processor - ERROR - Error initializing models: Weights only load failed. This file can still be loaded, to do so you have two options, [1mdo those steps only if you trust the source of the checkpoint[0m. 
+	(1) In PyTorch 2.6, we changed the default value of the `weights_only` argument in `torch.load` from `False` to `True`. Re-running `torch.load` with `weights_only` set to `False` will likely succeed, but it can result in arbitrary code execution. Do it only if you got the file from a trusted source.
+	(2) Alternatively, to load with `weights_only=True` please check the recommended steps in the following error message.
+	WeightsUnpickler error: Unsupported global: GLOBAL numpy._core.multiarray._reconstruct was not an allowed global by default. Please use `torch.serialization.add_safe_globals([_reconstruct])` or the `torch.serialization.safe_globals([_reconstruct])` context manager to allowlist this global if you trust this class/function.
+
+Check the documentation of torch.load to learn more about types accepted by default with weights_only https://pytorch.org/docs/stable/generated/torch.load.html.
+2025-04-23 12:07:40,645 - app.video_processor - ERROR - Traceback (most recent call last):
+  File "c:\Users\hadif\pojectt\project490\web_app\app\video_processor.py", line 632, in _init_model
+    self.lstm_model.load_state_dict(torch.load(self.model_path, map_location=device))
+  File "C:\Users\hadif\pojectt\project490\.venv\lib\site-packages\torch\serialization.py", line 1470, in load
+    raise pickle.UnpicklingError(_get_wo_message(str(e))) from None
+_pickle.UnpicklingError: Weights only load failed. This file can still be loaded, to do so you have two options, [1mdo those steps only if you trust the source of the checkpoint[0m. 
+	(1) In PyTorch 2.6, we changed the default value of the `weights_only` argument in `torch.load` from `False` to `True`. Re-running `torch.load` with `weights_only` set to `False` will likely succeed, but it can result in arbitrary code execution. Do it only if you got the file from a trusted source.
+	(2) Alternatively, to load with `weights_only=True` please check the recommended steps in the following error message.
+	WeightsUnpickler error: Unsupported global: GLOBAL numpy._core.multiarray._reconstruct was not an allowed global by default. Please use `torch.serialization.add_safe_globals([_reconstruct])` or the `torch.serialization.safe_globals([_reconstruct])` context manager to allowlist this global if you trust this class/function.
+
+Check the documentation of torch.load to learn more about types accepted by default with weights_only https://pytorch.org/docs/stable/generated/torch.load.html.
+
+2025-04-23 12:07:40,645 - app.video_processor - ERROR - Error initializing models: Error during initialization: Weights only load failed. This file can still be loaded, to do so you have two options, [1mdo those steps only if you trust the source of the checkpoint[0m. 
+	(1) In PyTorch 2.6, we changed the default value of the `weights_only` argument in `torch.load` from `False` to `True`. Re-running `torch.load` with `weights_only` set to `False` will likely succeed, but it can result in arbitrary code execution. Do it only if you got the file from a trusted source.
+	(2) Alternatively, to load with `weights_only=True` please check the recommended steps in the following error message.
+	WeightsUnpickler error: Unsupported global: GLOBAL numpy._core.multiarray._reconstruct was not an allowed global by default. Please use `torch.serialization.add_safe_globals([_reconstruct])` or the `torch.serialization.safe_globals([_reconstruct])` context manager to allowlist this global if you trust this class/function.
+
+Check the documentation of torch.load to learn more about types accepted by default with weights_only https://pytorch.org/docs/stable/generated/torch.load.html.
+2025-04-23 12:07:40,645 - app.video_processor - ERROR - Traceback (most recent call last):
+  File "c:\Users\hadif\pojectt\project490\web_app\app\video_processor.py", line 632, in _init_model
+    self.lstm_model.load_state_dict(torch.load(self.model_path, map_location=device))
+  File "C:\Users\hadif\pojectt\project490\.venv\lib\site-packages\torch\serialization.py", line 1470, in load
+    raise pickle.UnpicklingError(_get_wo_message(str(e))) from None
+_pickle.UnpicklingError: Weights only load failed. This file can still be loaded, to do so you have two options, [1mdo those steps only if you trust the source of the checkpoint[0m. 
+	(1) In PyTorch 2.6, we changed the default value of the `weights_only` argument in `torch.load` from `False` to `True`. Re-running `torch.load` with `weights_only` set to `False` will likely succeed, but it can result in arbitrary code execution. Do it only if you got the file from a trusted source.
+	(2) Alternatively, to load with `weights_only=True` please check the recommended steps in the following error message.
+	WeightsUnpickler error: Unsupported global: GLOBAL numpy._core.multiarray._reconstruct was not an allowed global by default. Please use `torch.serialization.add_safe_globals([_reconstruct])` or the `torch.serialization.safe_globals([_reconstruct])` context manager to allowlist this global if you trust this class/function.
+
+Check the documentation of torch.load to learn more about types accepted by default with weights_only https://pytorch.org/docs/stable/generated/torch.load.html.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "c:\Users\hadif\pojectt\project490\web_app\app\video_processor.py", line 643, in _init_model
+    raise RuntimeError(f"Error during initialization: {str(e)}")
+RuntimeError: Error during initialization: Weights only load failed. This file can still be loaded, to do so you have two options, [1mdo those steps only if you trust the source of the checkpoint[0m. 
+	(1) In PyTorch 2.6, we changed the default value of the `weights_only` argument in `torch.load` from `False` to `True`. Re-running `torch.load` with `weights_only` set to `False` will likely succeed, but it can result in arbitrary code execution. Do it only if you got the file from a trusted source.
+	(2) Alternatively, to load with `weights_only=True` please check the recommended steps in the following error message.
+	WeightsUnpickler error: Unsupported global: GLOBAL numpy._core.multiarray._reconstruct was not an allowed global by default. Please use `torch.serialization.add_safe_globals([_reconstruct])` or the `torch.serialization.safe_globals([_reconstruct])` context manager to allowlist this global if you trust this class/function.
+
+Check the documentation of torch.load to learn more about types accepted by default with weights_only https://pytorch.org/docs/stable/generated/torch.load.html.
+
+2025-04-23 12:07:40,654 - app.video_processor - ERROR - Error during initialization: Error during initialization: Weights only load failed. This file can still be loaded, to do so you have two options, [1mdo those steps only if you trust the source of the checkpoint[0m. 
+	(1) In PyTorch 2.6, we changed the default value of the `weights_only` argument in `torch.load` from `False` to `True`. Re-running `torch.load` with `weights_only` set to `False` will likely succeed, but it can result in arbitrary code execution. Do it only if you got the file from a trusted source.
+	(2) Alternatively, to load with `weights_only=True` please check the recommended steps in the following error message.
+	WeightsUnpickler error: Unsupported global: GLOBAL numpy._core.multiarray._reconstruct was not an allowed global by default. Please use `torch.serialization.add_safe_globals([_reconstruct])` or the `torch.serialization.safe_globals([_reconstruct])` context manager to allowlist this global if you trust this class/function.
+
+Check the documentation of torch.load to learn more about types accepted by default with weights_only https://pytorch.org/docs/stable/generated/torch.load.html.
+2025-04-23 12:07:40,656 - app.video_processor - ERROR - Traceback (most recent call last):
+  File "c:\Users\hadif\pojectt\project490\web_app\app\video_processor.py", line 632, in _init_model
+    self.lstm_model.load_state_dict(torch.load(self.model_path, map_location=device))
+  File "C:\Users\hadif\pojectt\project490\.venv\lib\site-packages\torch\serialization.py", line 1470, in load
+    raise pickle.UnpicklingError(_get_wo_message(str(e))) from None
+_pickle.UnpicklingError: Weights only load failed. This file can still be loaded, to do so you have two options, [1mdo those steps only if you trust the source of the checkpoint[0m. 
+	(1) In PyTorch 2.6, we changed the default value of the `weights_only` argument in `torch.load` from `False` to `True`. Re-running `torch.load` with `weights_only` set to `False` will likely succeed, but it can result in arbitrary code execution. Do it only if you got the file from a trusted source.
+	(2) Alternatively, to load with `weights_only=True` please check the recommended steps in the following error message.
+	WeightsUnpickler error: Unsupported global: GLOBAL numpy._core.multiarray._reconstruct was not an allowed global by default. Please use `torch.serialization.add_safe_globals([_reconstruct])` or the `torch.serialization.safe_globals([_reconstruct])` context manager to allowlist this global if you trust this class/function.
+
+Check the documentation of torch.load to learn more about types accepted by default with weights_only https://pytorch.org/docs/stable/generated/torch.load.html.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "c:\Users\hadif\pojectt\project490\web_app\app\video_processor.py", line 603, in __init__
+    self._init_model()
+  File "c:\Users\hadif\pojectt\project490\web_app\app\video_processor.py", line 643, in _init_model
+    raise RuntimeError(f"Error during initialization: {str(e)}")
+RuntimeError: Error during initialization: Weights only load failed. This file can still be loaded, to do so you have two options, [1mdo those steps only if you trust the source of the checkpoint[0m. 
+	(1) In PyTorch 2.6, we changed the default value of the `weights_only` argument in `torch.load` from `False` to `True`. Re-running `torch.load` with `weights_only` set to `False` will likely succeed, but it can result in arbitrary code execution. Do it only if you got the file from a trusted source.
+	(2) Alternatively, to load with `weights_only=True` please check the recommended steps in the following error message.
+	WeightsUnpickler error: Unsupported global: GLOBAL numpy._core.multiarray._reconstruct was not an allowed global by default. Please use `torch.serialization.add_safe_globals([_reconstruct])` or the `torch.serialization.safe_globals([_reconstruct])` context manager to allowlist this global if you trust this class/function.
+
+Check the documentation of torch.load to learn more about types accepted by default with weights_only https://pytorch.org/docs/stable/generated/torch.load.html.
+
+2025-04-23 12:07:40,725 - werkzeug - INFO - 127.0.0.1 - - [23/Apr/2025 12:07:40] "[35m[1mPOST /upload HTTP/1.1[0m" 500 -
+2025-04-23 12:07:42,321 - app.video_processor - INFO - Initializing VideoProcessor with: video_path=c:\Users\hadif\pojectt\project490\web_app\uploads\d11c20a3-c01f-43b1-a3a6-732cc1bbf00e\firstjetvideo.mp4, model_path=c:\Users\hadif\pojectt\project490\web_app\uploads\d11c20a3-c01f-43b1-a3a6-732cc1bbf00e\jet_lstm_model.pt
+2025-04-23 12:07:42,330 - app.video_processor - INFO - Loading object detection model...
+2025-04-23 12:07:43,669 - app.video_processor - INFO - Object detection model loaded successfully
+2025-04-23 12:07:43,669 - app.video_processor - INFO - Loading LSTM model from c:\Users\hadif\pojectt\project490\web_app\uploads\d11c20a3-c01f-43b1-a3a6-732cc1bbf00e\jet_lstm_model.pt...
+2025-04-23 12:07:43,709 - app.video_processor - ERROR - Error initializing models: Weights only load failed. This file can still be loaded, to do so you have two options, [1mdo those steps only if you trust the source of the checkpoint[0m. 
+	(1) In PyTorch 2.6, we changed the default value of the `weights_only` argument in `torch.load` from `False` to `True`. Re-running `torch.load` with `weights_only` set to `False` will likely succeed, but it can result in arbitrary code execution. Do it only if you got the file from a trusted source.
+	(2) Alternatively, to load with `weights_only=True` please check the recommended steps in the following error message.
+	WeightsUnpickler error: Unsupported global: GLOBAL numpy._core.multiarray._reconstruct was not an allowed global by default. Please use `torch.serialization.add_safe_globals([_reconstruct])` or the `torch.serialization.safe_globals([_reconstruct])` context manager to allowlist this global if you trust this class/function.
+
+Check the documentation of torch.load to learn more about types accepted by default with weights_only https://pytorch.org/docs/stable/generated/torch.load.html.
+2025-04-23 12:07:43,709 - app.video_processor - ERROR - Traceback (most recent call last):
+  File "c:\Users\hadif\pojectt\project490\web_app\app\video_processor.py", line 632, in _init_model
+    self.lstm_model.load_state_dict(torch.load(self.model_path, map_location=device))
+  File "C:\Users\hadif\pojectt\project490\.venv\lib\site-packages\torch\serialization.py", line 1470, in load
+    raise pickle.UnpicklingError(_get_wo_message(str(e))) from None
+_pickle.UnpicklingError: Weights only load failed. This file can still be loaded, to do so you have two options, [1mdo those steps only if you trust the source of the checkpoint[0m. 
+	(1) In PyTorch 2.6, we changed the default value of the `weights_only` argument in `torch.load` from `False` to `True`. Re-running `torch.load` with `weights_only` set to `False` will likely succeed, but it can result in arbitrary code execution. Do it only if you got the file from a trusted source.
+	(2) Alternatively, to load with `weights_only=True` please check the recommended steps in the following error message.
+	WeightsUnpickler error: Unsupported global: GLOBAL numpy._core.multiarray._reconstruct was not an allowed global by default. Please use `torch.serialization.add_safe_globals([_reconstruct])` or the `torch.serialization.safe_globals([_reconstruct])` context manager to allowlist this global if you trust this class/function.
+
+Check the documentation of torch.load to learn more about types accepted by default with weights_only https://pytorch.org/docs/stable/generated/torch.load.html.
+
+2025-04-23 12:07:43,709 - app.video_processor - ERROR - Error initializing models: Error during initialization: Weights only load failed. This file can still be loaded, to do so you have two options, [1mdo those steps only if you trust the source of the checkpoint[0m. 
+	(1) In PyTorch 2.6, we changed the default value of the `weights_only` argument in `torch.load` from `False` to `True`. Re-running `torch.load` with `weights_only` set to `False` will likely succeed, but it can result in arbitrary code execution. Do it only if you got the file from a trusted source.
+	(2) Alternatively, to load with `weights_only=True` please check the recommended steps in the following error message.
+	WeightsUnpickler error: Unsupported global: GLOBAL numpy._core.multiarray._reconstruct was not an allowed global by default. Please use `torch.serialization.add_safe_globals([_reconstruct])` or the `torch.serialization.safe_globals([_reconstruct])` context manager to allowlist this global if you trust this class/function.
+
+Check the documentation of torch.load to learn more about types accepted by default with weights_only https://pytorch.org/docs/stable/generated/torch.load.html.
+2025-04-23 12:07:43,709 - app.video_processor - ERROR - Traceback (most recent call last):
+  File "c:\Users\hadif\pojectt\project490\web_app\app\video_processor.py", line 632, in _init_model
+    self.lstm_model.load_state_dict(torch.load(self.model_path, map_location=device))
+  File "C:\Users\hadif\pojectt\project490\.venv\lib\site-packages\torch\serialization.py", line 1470, in load
+    raise pickle.UnpicklingError(_get_wo_message(str(e))) from None
+_pickle.UnpicklingError: Weights only load failed. This file can still be loaded, to do so you have two options, [1mdo those steps only if you trust the source of the checkpoint[0m. 
+	(1) In PyTorch 2.6, we changed the default value of the `weights_only` argument in `torch.load` from `False` to `True`. Re-running `torch.load` with `weights_only` set to `False` will likely succeed, but it can result in arbitrary code execution. Do it only if you got the file from a trusted source.
+	(2) Alternatively, to load with `weights_only=True` please check the recommended steps in the following error message.
+	WeightsUnpickler error: Unsupported global: GLOBAL numpy._core.multiarray._reconstruct was not an allowed global by default. Please use `torch.serialization.add_safe_globals([_reconstruct])` or the `torch.serialization.safe_globals([_reconstruct])` context manager to allowlist this global if you trust this class/function.
+
+Check the documentation of torch.load to learn more about types accepted by default with weights_only https://pytorch.org/docs/stable/generated/torch.load.html.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "c:\Users\hadif\pojectt\project490\web_app\app\video_processor.py", line 643, in _init_model
+    raise RuntimeError(f"Error during initialization: {str(e)}")
+RuntimeError: Error during initialization: Weights only load failed. This file can still be loaded, to do so you have two options, [1mdo those steps only if you trust the source of the checkpoint[0m. 
+	(1) In PyTorch 2.6, we changed the default value of the `weights_only` argument in `torch.load` from `False` to `True`. Re-running `torch.load` with `weights_only` set to `False` will likely succeed, but it can result in arbitrary code execution. Do it only if you got the file from a trusted source.
+	(2) Alternatively, to load with `weights_only=True` please check the recommended steps in the following error message.
+	WeightsUnpickler error: Unsupported global: GLOBAL numpy._core.multiarray._reconstruct was not an allowed global by default. Please use `torch.serialization.add_safe_globals([_reconstruct])` or the `torch.serialization.safe_globals([_reconstruct])` context manager to allowlist this global if you trust this class/function.
+
+Check the documentation of torch.load to learn more about types accepted by default with weights_only https://pytorch.org/docs/stable/generated/torch.load.html.
+
+2025-04-23 12:07:43,717 - app.video_processor - ERROR - Error during initialization: Error during initialization: Weights only load failed. This file can still be loaded, to do so you have two options, [1mdo those steps only if you trust the source of the checkpoint[0m. 
+	(1) In PyTorch 2.6, we changed the default value of the `weights_only` argument in `torch.load` from `False` to `True`. Re-running `torch.load` with `weights_only` set to `False` will likely succeed, but it can result in arbitrary code execution. Do it only if you got the file from a trusted source.
+	(2) Alternatively, to load with `weights_only=True` please check the recommended steps in the following error message.
+	WeightsUnpickler error: Unsupported global: GLOBAL numpy._core.multiarray._reconstruct was not an allowed global by default. Please use `torch.serialization.add_safe_globals([_reconstruct])` or the `torch.serialization.safe_globals([_reconstruct])` context manager to allowlist this global if you trust this class/function.
+
+Check the documentation of torch.load to learn more about types accepted by default with weights_only https://pytorch.org/docs/stable/generated/torch.load.html.
+2025-04-23 12:07:43,719 - app.video_processor - ERROR - Traceback (most recent call last):
+  File "c:\Users\hadif\pojectt\project490\web_app\app\video_processor.py", line 632, in _init_model
+    self.lstm_model.load_state_dict(torch.load(self.model_path, map_location=device))
+  File "C:\Users\hadif\pojectt\project490\.venv\lib\site-packages\torch\serialization.py", line 1470, in load
+    raise pickle.UnpicklingError(_get_wo_message(str(e))) from None
+_pickle.UnpicklingError: Weights only load failed. This file can still be loaded, to do so you have two options, [1mdo those steps only if you trust the source of the checkpoint[0m. 
+	(1) In PyTorch 2.6, we changed the default value of the `weights_only` argument in `torch.load` from `False` to `True`. Re-running `torch.load` with `weights_only` set to `False` will likely succeed, but it can result in arbitrary code execution. Do it only if you got the file from a trusted source.
+	(2) Alternatively, to load with `weights_only=True` please check the recommended steps in the following error message.
+	WeightsUnpickler error: Unsupported global: GLOBAL numpy._core.multiarray._reconstruct was not an allowed global by default. Please use `torch.serialization.add_safe_globals([_reconstruct])` or the `torch.serialization.safe_globals([_reconstruct])` context manager to allowlist this global if you trust this class/function.
+
+Check the documentation of torch.load to learn more about types accepted by default with weights_only https://pytorch.org/docs/stable/generated/torch.load.html.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "c:\Users\hadif\pojectt\project490\web_app\app\video_processor.py", line 603, in __init__
+    self._init_model()
+  File "c:\Users\hadif\pojectt\project490\web_app\app\video_processor.py", line 643, in _init_model
+    raise RuntimeError(f"Error during initialization: {str(e)}")
+RuntimeError: Error during initialization: Weights only load failed. This file can still be loaded, to do so you have two options, [1mdo those steps only if you trust the source of the checkpoint[0m. 
+	(1) In PyTorch 2.6, we changed the default value of the `weights_only` argument in `torch.load` from `False` to `True`. Re-running `torch.load` with `weights_only` set to `False` will likely succeed, but it can result in arbitrary code execution. Do it only if you got the file from a trusted source.
+	(2) Alternatively, to load with `weights_only=True` please check the recommended steps in the following error message.
+	WeightsUnpickler error: Unsupported global: GLOBAL numpy._core.multiarray._reconstruct was not an allowed global by default. Please use `torch.serialization.add_safe_globals([_reconstruct])` or the `torch.serialization.safe_globals([_reconstruct])` context manager to allowlist this global if you trust this class/function.
+
+Check the documentation of torch.load to learn more about types accepted by default with weights_only https://pytorch.org/docs/stable/generated/torch.load.html.
+
+2025-04-23 12:07:43,767 - werkzeug - INFO - 127.0.0.1 - - [23/Apr/2025 12:07:43] "[35m[1mPOST /upload HTTP/1.1[0m" 500 -
+2025-04-23 12:07:54,064 - app.video_processor - INFO - Initializing VideoProcessor with: video_path=c:\Users\hadif\pojectt\project490\web_app\uploads\f6c6915d-da8f-4d2d-b083-7a457cdbda4f\fj3.mp4, model_path=c:\Users\hadif\pojectt\project490\web_app\uploads\f6c6915d-da8f-4d2d-b083-7a457cdbda4f\jet_lstm_model.pt
+2025-04-23 12:07:54,072 - app.video_processor - INFO - Loading object detection model...
+2025-04-23 12:07:55,560 - app.video_processor - INFO - Object detection model loaded successfully
+2025-04-23 12:07:55,562 - app.video_processor - INFO - Loading LSTM model from c:\Users\hadif\pojectt\project490\web_app\uploads\f6c6915d-da8f-4d2d-b083-7a457cdbda4f\jet_lstm_model.pt...
+2025-04-23 12:07:55,612 - app.video_processor - ERROR - Error initializing models: Weights only load failed. This file can still be loaded, to do so you have two options, [1mdo those steps only if you trust the source of the checkpoint[0m. 
+	(1) In PyTorch 2.6, we changed the default value of the `weights_only` argument in `torch.load` from `False` to `True`. Re-running `torch.load` with `weights_only` set to `False` will likely succeed, but it can result in arbitrary code execution. Do it only if you got the file from a trusted source.
+	(2) Alternatively, to load with `weights_only=True` please check the recommended steps in the following error message.
+	WeightsUnpickler error: Unsupported global: GLOBAL numpy._core.multiarray._reconstruct was not an allowed global by default. Please use `torch.serialization.add_safe_globals([_reconstruct])` or the `torch.serialization.safe_globals([_reconstruct])` context manager to allowlist this global if you trust this class/function.
+
+Check the documentation of torch.load to learn more about types accepted by default with weights_only https://pytorch.org/docs/stable/generated/torch.load.html.
+2025-04-23 12:07:55,612 - app.video_processor - ERROR - Traceback (most recent call last):
+  File "c:\Users\hadif\pojectt\project490\web_app\app\video_processor.py", line 632, in _init_model
+    self.lstm_model.load_state_dict(torch.load(self.model_path, map_location=device))
+  File "C:\Users\hadif\pojectt\project490\.venv\lib\site-packages\torch\serialization.py", line 1470, in load
+    raise pickle.UnpicklingError(_get_wo_message(str(e))) from None
+_pickle.UnpicklingError: Weights only load failed. This file can still be loaded, to do so you have two options, [1mdo those steps only if you trust the source of the checkpoint[0m. 
+	(1) In PyTorch 2.6, we changed the default value of the `weights_only` argument in `torch.load` from `False` to `True`. Re-running `torch.load` with `weights_only` set to `False` will likely succeed, but it can result in arbitrary code execution. Do it only if you got the file from a trusted source.
+	(2) Alternatively, to load with `weights_only=True` please check the recommended steps in the following error message.
+	WeightsUnpickler error: Unsupported global: GLOBAL numpy._core.multiarray._reconstruct was not an allowed global by default. Please use `torch.serialization.add_safe_globals([_reconstruct])` or the `torch.serialization.safe_globals([_reconstruct])` context manager to allowlist this global if you trust this class/function.
+
+Check the documentation of torch.load to learn more about types accepted by default with weights_only https://pytorch.org/docs/stable/generated/torch.load.html.
+
+2025-04-23 12:07:55,612 - app.video_processor - ERROR - Error initializing models: Error during initialization: Weights only load failed. This file can still be loaded, to do so you have two options, [1mdo those steps only if you trust the source of the checkpoint[0m. 
+	(1) In PyTorch 2.6, we changed the default value of the `weights_only` argument in `torch.load` from `False` to `True`. Re-running `torch.load` with `weights_only` set to `False` will likely succeed, but it can result in arbitrary code execution. Do it only if you got the file from a trusted source.
+	(2) Alternatively, to load with `weights_only=True` please check the recommended steps in the following error message.
+	WeightsUnpickler error: Unsupported global: GLOBAL numpy._core.multiarray._reconstruct was not an allowed global by default. Please use `torch.serialization.add_safe_globals([_reconstruct])` or the `torch.serialization.safe_globals([_reconstruct])` context manager to allowlist this global if you trust this class/function.
+
+Check the documentation of torch.load to learn more about types accepted by default with weights_only https://pytorch.org/docs/stable/generated/torch.load.html.
+2025-04-23 12:07:55,620 - app.video_processor - ERROR - Traceback (most recent call last):
+  File "c:\Users\hadif\pojectt\project490\web_app\app\video_processor.py", line 632, in _init_model
+    self.lstm_model.load_state_dict(torch.load(self.model_path, map_location=device))
+  File "C:\Users\hadif\pojectt\project490\.venv\lib\site-packages\torch\serialization.py", line 1470, in load
+    raise pickle.UnpicklingError(_get_wo_message(str(e))) from None
+_pickle.UnpicklingError: Weights only load failed. This file can still be loaded, to do so you have two options, [1mdo those steps only if you trust the source of the checkpoint[0m. 
+	(1) In PyTorch 2.6, we changed the default value of the `weights_only` argument in `torch.load` from `False` to `True`. Re-running `torch.load` with `weights_only` set to `False` will likely succeed, but it can result in arbitrary code execution. Do it only if you got the file from a trusted source.
+	(2) Alternatively, to load with `weights_only=True` please check the recommended steps in the following error message.
+	WeightsUnpickler error: Unsupported global: GLOBAL numpy._core.multiarray._reconstruct was not an allowed global by default. Please use `torch.serialization.add_safe_globals([_reconstruct])` or the `torch.serialization.safe_globals([_reconstruct])` context manager to allowlist this global if you trust this class/function.
+
+Check the documentation of torch.load to learn more about types accepted by default with weights_only https://pytorch.org/docs/stable/generated/torch.load.html.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "c:\Users\hadif\pojectt\project490\web_app\app\video_processor.py", line 643, in _init_model
+    raise RuntimeError(f"Error during initialization: {str(e)}")
+RuntimeError: Error during initialization: Weights only load failed. This file can still be loaded, to do so you have two options, [1mdo those steps only if you trust the source of the checkpoint[0m. 
+	(1) In PyTorch 2.6, we changed the default value of the `weights_only` argument in `torch.load` from `False` to `True`. Re-running `torch.load` with `weights_only` set to `False` will likely succeed, but it can result in arbitrary code execution. Do it only if you got the file from a trusted source.
+	(2) Alternatively, to load with `weights_only=True` please check the recommended steps in the following error message.
+	WeightsUnpickler error: Unsupported global: GLOBAL numpy._core.multiarray._reconstruct was not an allowed global by default. Please use `torch.serialization.add_safe_globals([_reconstruct])` or the `torch.serialization.safe_globals([_reconstruct])` context manager to allowlist this global if you trust this class/function.
+
+Check the documentation of torch.load to learn more about types accepted by default with weights_only https://pytorch.org/docs/stable/generated/torch.load.html.
+
+2025-04-23 12:07:55,622 - app.video_processor - ERROR - Error during initialization: Error during initialization: Weights only load failed. This file can still be loaded, to do so you have two options, [1mdo those steps only if you trust the source of the checkpoint[0m. 
+	(1) In PyTorch 2.6, we changed the default value of the `weights_only` argument in `torch.load` from `False` to `True`. Re-running `torch.load` with `weights_only` set to `False` will likely succeed, but it can result in arbitrary code execution. Do it only if you got the file from a trusted source.
+	(2) Alternatively, to load with `weights_only=True` please check the recommended steps in the following error message.
+	WeightsUnpickler error: Unsupported global: GLOBAL numpy._core.multiarray._reconstruct was not an allowed global by default. Please use `torch.serialization.add_safe_globals([_reconstruct])` or the `torch.serialization.safe_globals([_reconstruct])` context manager to allowlist this global if you trust this class/function.
+
+Check the documentation of torch.load to learn more about types accepted by default with weights_only https://pytorch.org/docs/stable/generated/torch.load.html.
+2025-04-23 12:07:55,624 - app.video_processor - ERROR - Traceback (most recent call last):
+  File "c:\Users\hadif\pojectt\project490\web_app\app\video_processor.py", line 632, in _init_model
+    self.lstm_model.load_state_dict(torch.load(self.model_path, map_location=device))
+  File "C:\Users\hadif\pojectt\project490\.venv\lib\site-packages\torch\serialization.py", line 1470, in load
+    raise pickle.UnpicklingError(_get_wo_message(str(e))) from None
+_pickle.UnpicklingError: Weights only load failed. This file can still be loaded, to do so you have two options, [1mdo those steps only if you trust the source of the checkpoint[0m. 
+	(1) In PyTorch 2.6, we changed the default value of the `weights_only` argument in `torch.load` from `False` to `True`. Re-running `torch.load` with `weights_only` set to `False` will likely succeed, but it can result in arbitrary code execution. Do it only if you got the file from a trusted source.
+	(2) Alternatively, to load with `weights_only=True` please check the recommended steps in the following error message.
+	WeightsUnpickler error: Unsupported global: GLOBAL numpy._core.multiarray._reconstruct was not an allowed global by default. Please use `torch.serialization.add_safe_globals([_reconstruct])` or the `torch.serialization.safe_globals([_reconstruct])` context manager to allowlist this global if you trust this class/function.
+
+Check the documentation of torch.load to learn more about types accepted by default with weights_only https://pytorch.org/docs/stable/generated/torch.load.html.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "c:\Users\hadif\pojectt\project490\web_app\app\video_processor.py", line 603, in __init__
+    self._init_model()
+  File "c:\Users\hadif\pojectt\project490\web_app\app\video_processor.py", line 643, in _init_model
+    raise RuntimeError(f"Error during initialization: {str(e)}")
+RuntimeError: Error during initialization: Weights only load failed. This file can still be loaded, to do so you have two options, [1mdo those steps only if you trust the source of the checkpoint[0m. 
+	(1) In PyTorch 2.6, we changed the default value of the `weights_only` argument in `torch.load` from `False` to `True`. Re-running `torch.load` with `weights_only` set to `False` will likely succeed, but it can result in arbitrary code execution. Do it only if you got the file from a trusted source.
+	(2) Alternatively, to load with `weights_only=True` please check the recommended steps in the following error message.
+	WeightsUnpickler error: Unsupported global: GLOBAL numpy._core.multiarray._reconstruct was not an allowed global by default. Please use `torch.serialization.add_safe_globals([_reconstruct])` or the `torch.serialization.safe_globals([_reconstruct])` context manager to allowlist this global if you trust this class/function.
+
+Check the documentation of torch.load to learn more about types accepted by default with weights_only https://pytorch.org/docs/stable/generated/torch.load.html.
+
+2025-04-23 12:07:55,660 - werkzeug - INFO - 127.0.0.1 - - [23/Apr/2025 12:07:55] "[35m[1mPOST /upload HTTP/1.1[0m" 500 -
+2025-04-23 12:09:04,545 - werkzeug - INFO -  * Detected change in 'c:\\Users\\hadif\\pojectt\\project490\\web_app\\app\\video_processor.py', reloading
+2025-04-23 12:09:05,912 - werkzeug - INFO -  * Restarting with stat
+2025-04-23 12:09:19,273 - app.video_processor - INFO - Using device: cpu
+2025-04-23 12:09:19,298 - werkzeug - WARNING -  * Debugger is active!
+2025-04-23 12:09:19,308 - werkzeug - INFO -  * Debugger PIN: 120-859-130
+2025-04-23 12:09:28,257 - werkzeug - INFO -  * Detected change in 'c:\\Users\\hadif\\pojectt\\project490\\web_app\\app\\routes.py', reloading
+2025-04-23 12:09:29,714 - werkzeug - INFO -  * Restarting with stat
+2025-04-23 12:09:42,739 - app.video_processor - INFO - Using device: cpu
+2025-04-23 12:09:42,778 - werkzeug - WARNING -  * Debugger is active!
+2025-04-23 12:09:42,791 - werkzeug - INFO -  * Debugger PIN: 120-859-130
+2025-04-23 12:12:55,158 - app.video_processor - INFO - Using device: cpu
+2025-04-23 12:12:55,245 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://10.169.18.142:5000
+2025-04-23 12:12:55,245 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2025-04-23 12:12:55,251 - werkzeug - INFO -  * Restarting with stat
+2025-04-23 12:13:06,911 - app.video_processor - INFO - Using device: cpu
+2025-04-23 12:13:06,956 - werkzeug - WARNING -  * Debugger is active!
+2025-04-23 12:13:06,973 - werkzeug - INFO -  * Debugger PIN: 120-859-130
+2025-04-23 12:13:51,130 - werkzeug - INFO - 127.0.0.1 - - [23/Apr/2025 12:13:51] "GET / HTTP/1.1" 200 -
+2025-04-23 12:13:51,336 - werkzeug - INFO - 127.0.0.1 - - [23/Apr/2025 12:13:51] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2025-04-23 12:14:25,126 - app.video_processor - INFO - Initializing VideoProcessor with: video_path=uploads\84a81af1-c11f-4cf4-97f3-558747983ae6\firstjetvideo.mp4, model_path=uploads\84a81af1-c11f-4cf4-97f3-558747983ae6\jet_lstm_model.pt
+2025-04-23 12:14:25,126 - app.video_processor - INFO - Loading object detection model...
+2025-04-23 12:14:26,627 - app.video_processor - INFO - Object detection model loaded successfully
+2025-04-23 12:14:26,629 - app.video_processor - INFO - Loading LSTM model from uploads\84a81af1-c11f-4cf4-97f3-558747983ae6\jet_lstm_model.pt...
+2025-04-23 12:14:26,681 - app.video_processor - ERROR - Error initializing models: Error(s) in loading state_dict for LSTMPredictor:
+	Missing key(s) in state_dict: "lstm.weight_ih_l0", "lstm.weight_hh_l0", "lstm.bias_ih_l0", "lstm.bias_hh_l0", "lstm.weight_ih_l1", "lstm.weight_hh_l1", "lstm.bias_ih_l1", "lstm.bias_hh_l1", "fc.weight", "fc.bias". 
+	Unexpected key(s) in state_dict: "model_state_dict", "model_info", "scaler", "sequence_length", "training_history". 
+2025-04-23 12:14:26,687 - app.video_processor - ERROR - Traceback (most recent call last):
+  File "c:\Users\hadif\pojectt\project490\web_app\app\video_processor.py", line 640, in _init_model
+    self.lstm_model.load_state_dict(torch.load(
+  File "C:\Users\hadif\pojectt\project490\.venv\lib\site-packages\torch\nn\modules\module.py", line 2581, in load_state_dict
+    raise RuntimeError(
+RuntimeError: Error(s) in loading state_dict for LSTMPredictor:
+	Missing key(s) in state_dict: "lstm.weight_ih_l0", "lstm.weight_hh_l0", "lstm.bias_ih_l0", "lstm.bias_hh_l0", "lstm.weight_ih_l1", "lstm.weight_hh_l1", "lstm.bias_ih_l1", "lstm.bias_hh_l1", "fc.weight", "fc.bias". 
+	Unexpected key(s) in state_dict: "model_state_dict", "model_info", "scaler", "sequence_length", "training_history". 
+
+2025-04-23 12:14:26,691 - app.video_processor - ERROR - Error initializing models: Error during initialization: Error(s) in loading state_dict for LSTMPredictor:
+	Missing key(s) in state_dict: "lstm.weight_ih_l0", "lstm.weight_hh_l0", "lstm.bias_ih_l0", "lstm.bias_hh_l0", "lstm.weight_ih_l1", "lstm.weight_hh_l1", "lstm.bias_ih_l1", "lstm.bias_hh_l1", "fc.weight", "fc.bias". 
+	Unexpected key(s) in state_dict: "model_state_dict", "model_info", "scaler", "sequence_length", "training_history". 
+2025-04-23 12:14:26,692 - app.video_processor - ERROR - Traceback (most recent call last):
+  File "c:\Users\hadif\pojectt\project490\web_app\app\video_processor.py", line 640, in _init_model
+    self.lstm_model.load_state_dict(torch.load(
+  File "C:\Users\hadif\pojectt\project490\.venv\lib\site-packages\torch\nn\modules\module.py", line 2581, in load_state_dict
+    raise RuntimeError(
+RuntimeError: Error(s) in loading state_dict for LSTMPredictor:
+	Missing key(s) in state_dict: "lstm.weight_ih_l0", "lstm.weight_hh_l0", "lstm.bias_ih_l0", "lstm.bias_hh_l0", "lstm.weight_ih_l1", "lstm.weight_hh_l1", "lstm.bias_ih_l1", "lstm.bias_hh_l1", "fc.weight", "fc.bias". 
+	Unexpected key(s) in state_dict: "model_state_dict", "model_info", "scaler", "sequence_length", "training_history". 
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "c:\Users\hadif\pojectt\project490\web_app\app\video_processor.py", line 655, in _init_model
+    raise RuntimeError(f"Error during initialization: {str(e)}")
+RuntimeError: Error during initialization: Error(s) in loading state_dict for LSTMPredictor:
+	Missing key(s) in state_dict: "lstm.weight_ih_l0", "lstm.weight_hh_l0", "lstm.bias_ih_l0", "lstm.bias_hh_l0", "lstm.weight_ih_l1", "lstm.weight_hh_l1", "lstm.bias_ih_l1", "lstm.bias_hh_l1", "fc.weight", "fc.bias". 
+	Unexpected key(s) in state_dict: "model_state_dict", "model_info", "scaler", "sequence_length", "training_history". 
+
+2025-04-23 12:14:26,692 - app.video_processor - ERROR - Error during initialization: Error during initialization: Error(s) in loading state_dict for LSTMPredictor:
+	Missing key(s) in state_dict: "lstm.weight_ih_l0", "lstm.weight_hh_l0", "lstm.bias_ih_l0", "lstm.bias_hh_l0", "lstm.weight_ih_l1", "lstm.weight_hh_l1", "lstm.bias_ih_l1", "lstm.bias_hh_l1", "fc.weight", "fc.bias". 
+	Unexpected key(s) in state_dict: "model_state_dict", "model_info", "scaler", "sequence_length", "training_history". 
+2025-04-23 12:14:26,692 - app.video_processor - ERROR - Traceback (most recent call last):
+  File "c:\Users\hadif\pojectt\project490\web_app\app\video_processor.py", line 640, in _init_model
+    self.lstm_model.load_state_dict(torch.load(
+  File "C:\Users\hadif\pojectt\project490\.venv\lib\site-packages\torch\nn\modules\module.py", line 2581, in load_state_dict
+    raise RuntimeError(
+RuntimeError: Error(s) in loading state_dict for LSTMPredictor:
+	Missing key(s) in state_dict: "lstm.weight_ih_l0", "lstm.weight_hh_l0", "lstm.bias_ih_l0", "lstm.bias_hh_l0", "lstm.weight_ih_l1", "lstm.weight_hh_l1", "lstm.bias_ih_l1", "lstm.bias_hh_l1", "fc.weight", "fc.bias". 
+	Unexpected key(s) in state_dict: "model_state_dict", "model_info", "scaler", "sequence_length", "training_history". 
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "c:\Users\hadif\pojectt\project490\web_app\app\video_processor.py", line 611, in __init__
+    self._init_model()
+  File "c:\Users\hadif\pojectt\project490\web_app\app\video_processor.py", line 655, in _init_model
+    raise RuntimeError(f"Error during initialization: {str(e)}")
+RuntimeError: Error during initialization: Error(s) in loading state_dict for LSTMPredictor:
+	Missing key(s) in state_dict: "lstm.weight_ih_l0", "lstm.weight_hh_l0", "lstm.bias_ih_l0", "lstm.bias_hh_l0", "lstm.weight_ih_l1", "lstm.weight_hh_l1", "lstm.bias_ih_l1", "lstm.bias_hh_l1", "fc.weight", "fc.bias". 
+	Unexpected key(s) in state_dict: "model_state_dict", "model_info", "scaler", "sequence_length", "training_history". 
+
+2025-04-23 12:14:26,692 - app - ERROR - Error processing upload: Error during initialization: Error(s) in loading state_dict for LSTMPredictor:
+	Missing key(s) in state_dict: "lstm.weight_ih_l0", "lstm.weight_hh_l0", "lstm.bias_ih_l0", "lstm.bias_hh_l0", "lstm.weight_ih_l1", "lstm.weight_hh_l1", "lstm.bias_ih_l1", "lstm.bias_hh_l1", "fc.weight", "fc.bias". 
+	Unexpected key(s) in state_dict: "model_state_dict", "model_info", "scaler", "sequence_length", "training_history". 
+2025-04-23 12:14:26,709 - app - ERROR - Traceback (most recent call last):
+  File "c:\Users\hadif\pojectt\project490\web_app\app\video_processor.py", line 640, in _init_model
+    self.lstm_model.load_state_dict(torch.load(
+  File "C:\Users\hadif\pojectt\project490\.venv\lib\site-packages\torch\nn\modules\module.py", line 2581, in load_state_dict
+    raise RuntimeError(
+RuntimeError: Error(s) in loading state_dict for LSTMPredictor:
+	Missing key(s) in state_dict: "lstm.weight_ih_l0", "lstm.weight_hh_l0", "lstm.bias_ih_l0", "lstm.bias_hh_l0", "lstm.weight_ih_l1", "lstm.weight_hh_l1", "lstm.bias_ih_l1", "lstm.bias_hh_l1", "fc.weight", "fc.bias". 
+	Unexpected key(s) in state_dict: "model_state_dict", "model_info", "scaler", "sequence_length", "training_history". 
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "c:\Users\hadif\pojectt\project490\web_app\app\routes.py", line 114, in upload_file
+    processor = VideoProcessor(
+  File "c:\Users\hadif\pojectt\project490\web_app\app\video_processor.py", line 611, in __init__
+    self._init_model()
+  File "c:\Users\hadif\pojectt\project490\web_app\app\video_processor.py", line 655, in _init_model
+    raise RuntimeError(f"Error during initialization: {str(e)}")
+RuntimeError: Error during initialization: Error(s) in loading state_dict for LSTMPredictor:
+	Missing key(s) in state_dict: "lstm.weight_ih_l0", "lstm.weight_hh_l0", "lstm.bias_ih_l0", "lstm.bias_hh_l0", "lstm.weight_ih_l1", "lstm.weight_hh_l1", "lstm.bias_ih_l1", "lstm.bias_hh_l1", "fc.weight", "fc.bias". 
+	Unexpected key(s) in state_dict: "model_state_dict", "model_info", "scaler", "sequence_length", "training_history". 
+
+2025-04-23 12:14:26,725 - werkzeug - INFO - 127.0.0.1 - - [23/Apr/2025 12:14:26] "[35m[1mPOST /upload HTTP/1.1[0m" 500 -
+2025-04-23 12:15:38,893 - werkzeug - INFO -  * Detected change in 'c:\\Users\\hadif\\pojectt\\project490\\web_app\\app\\video_processor.py', reloading
+2025-04-23 12:15:40,189 - werkzeug - INFO -  * Restarting with stat
+2025-04-23 12:15:53,512 - app.video_processor - INFO - Using device: cpu
+2025-04-23 12:15:53,539 - werkzeug - WARNING -  * Debugger is active!
+2025-04-23 12:15:53,548 - werkzeug - INFO -  * Debugger PIN: 120-859-130
+2025-04-23 12:16:17,507 - app.video_processor - INFO - Using device: cpu
+2025-04-23 12:16:17,681 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://10.169.18.142:5000
+2025-04-23 12:16:17,681 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2025-04-23 12:16:17,681 - werkzeug - INFO -  * Restarting with stat
+2025-04-23 12:16:30,596 - app.video_processor - INFO - Using device: cpu
+2025-04-23 12:16:30,637 - werkzeug - WARNING -  * Debugger is active!
+2025-04-23 12:16:30,649 - werkzeug - INFO -  * Debugger PIN: 120-859-130
+2025-04-23 12:16:43,390 - werkzeug - INFO - 127.0.0.1 - - [23/Apr/2025 12:16:43] "GET / HTTP/1.1" 200 -
+2025-04-23 12:17:00,706 - app.video_processor - INFO - Initializing VideoProcessor with: video_path=uploads\71133371-c158-406d-8a77-caab7833787c\firstjetvideo.mp4, model_path=uploads\71133371-c158-406d-8a77-caab7833787c\jet_lstm_model.pt
+2025-04-23 12:17:00,706 - app.video_processor - INFO - Loading object detection model...
+2025-04-23 12:17:02,203 - app.video_processor - INFO - Object detection model loaded successfully
+2025-04-23 12:17:02,206 - app.video_processor - INFO - Loading LSTM model from uploads\71133371-c158-406d-8a77-caab7833787c\jet_lstm_model.pt...
+2025-04-23 12:17:02,243 - app.video_processor - ERROR - Error initializing models: Error(s) in loading state_dict for LSTMPredictor:
+	size mismatch for lstm.weight_ih_l0: copying a param with shape torch.Size([40, 3]) from checkpoint, the shape in current model is torch.Size([160, 3]).
+	size mismatch for lstm.weight_hh_l0: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([160, 40]).
+	size mismatch for lstm.bias_ih_l0: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+	size mismatch for lstm.bias_hh_l0: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+	size mismatch for lstm.weight_ih_l1: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([160, 40]).
+	size mismatch for lstm.weight_hh_l1: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([160, 40]).
+	size mismatch for lstm.bias_ih_l1: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+	size mismatch for lstm.bias_hh_l1: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+	size mismatch for fc.weight: copying a param with shape torch.Size([3, 10]) from checkpoint, the shape in current model is torch.Size([3, 40]).
+2025-04-23 12:17:02,247 - app.video_processor - ERROR - Traceback (most recent call last):
+  File "c:\Users\hadif\pojectt\project490\web_app\app\video_processor.py", line 649, in _init_model
+    self.lstm_model.load_state_dict(checkpoint['model_state_dict'])
+  File "C:\Users\hadif\pojectt\project490\.venv\lib\site-packages\torch\nn\modules\module.py", line 2581, in load_state_dict
+    raise RuntimeError(
+RuntimeError: Error(s) in loading state_dict for LSTMPredictor:
+	size mismatch for lstm.weight_ih_l0: copying a param with shape torch.Size([40, 3]) from checkpoint, the shape in current model is torch.Size([160, 3]).
+	size mismatch for lstm.weight_hh_l0: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([160, 40]).
+	size mismatch for lstm.bias_ih_l0: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+	size mismatch for lstm.bias_hh_l0: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+	size mismatch for lstm.weight_ih_l1: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([160, 40]).
+	size mismatch for lstm.weight_hh_l1: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([160, 40]).
+	size mismatch for lstm.bias_ih_l1: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+	size mismatch for lstm.bias_hh_l1: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+	size mismatch for fc.weight: copying a param with shape torch.Size([3, 10]) from checkpoint, the shape in current model is torch.Size([3, 40]).
+
+2025-04-23 12:17:02,249 - app.video_processor - ERROR - Error initializing models: Error during initialization: Error(s) in loading state_dict for LSTMPredictor:
+	size mismatch for lstm.weight_ih_l0: copying a param with shape torch.Size([40, 3]) from checkpoint, the shape in current model is torch.Size([160, 3]).
+	size mismatch for lstm.weight_hh_l0: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([160, 40]).
+	size mismatch for lstm.bias_ih_l0: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+	size mismatch for lstm.bias_hh_l0: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+	size mismatch for lstm.weight_ih_l1: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([160, 40]).
+	size mismatch for lstm.weight_hh_l1: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([160, 40]).
+	size mismatch for lstm.bias_ih_l1: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+	size mismatch for lstm.bias_hh_l1: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+	size mismatch for fc.weight: copying a param with shape torch.Size([3, 10]) from checkpoint, the shape in current model is torch.Size([3, 40]).
+2025-04-23 12:17:02,253 - app.video_processor - ERROR - Traceback (most recent call last):
+  File "c:\Users\hadif\pojectt\project490\web_app\app\video_processor.py", line 649, in _init_model
+    self.lstm_model.load_state_dict(checkpoint['model_state_dict'])
+  File "C:\Users\hadif\pojectt\project490\.venv\lib\site-packages\torch\nn\modules\module.py", line 2581, in load_state_dict
+    raise RuntimeError(
+RuntimeError: Error(s) in loading state_dict for LSTMPredictor:
+	size mismatch for lstm.weight_ih_l0: copying a param with shape torch.Size([40, 3]) from checkpoint, the shape in current model is torch.Size([160, 3]).
+	size mismatch for lstm.weight_hh_l0: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([160, 40]).
+	size mismatch for lstm.bias_ih_l0: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+	size mismatch for lstm.bias_hh_l0: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+	size mismatch for lstm.weight_ih_l1: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([160, 40]).
+	size mismatch for lstm.weight_hh_l1: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([160, 40]).
+	size mismatch for lstm.bias_ih_l1: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+	size mismatch for lstm.bias_hh_l1: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+	size mismatch for fc.weight: copying a param with shape torch.Size([3, 10]) from checkpoint, the shape in current model is torch.Size([3, 40]).
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "c:\Users\hadif\pojectt\project490\web_app\app\video_processor.py", line 667, in _init_model
+    raise RuntimeError(f"Error during initialization: {str(e)}")
+RuntimeError: Error during initialization: Error(s) in loading state_dict for LSTMPredictor:
+	size mismatch for lstm.weight_ih_l0: copying a param with shape torch.Size([40, 3]) from checkpoint, the shape in current model is torch.Size([160, 3]).
+	size mismatch for lstm.weight_hh_l0: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([160, 40]).
+	size mismatch for lstm.bias_ih_l0: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+	size mismatch for lstm.bias_hh_l0: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+	size mismatch for lstm.weight_ih_l1: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([160, 40]).
+	size mismatch for lstm.weight_hh_l1: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([160, 40]).
+	size mismatch for lstm.bias_ih_l1: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+	size mismatch for lstm.bias_hh_l1: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+	size mismatch for fc.weight: copying a param with shape torch.Size([3, 10]) from checkpoint, the shape in current model is torch.Size([3, 40]).
+
+2025-04-23 12:17:02,254 - app.video_processor - ERROR - Error during initialization: Error during initialization: Error(s) in loading state_dict for LSTMPredictor:
+	size mismatch for lstm.weight_ih_l0: copying a param with shape torch.Size([40, 3]) from checkpoint, the shape in current model is torch.Size([160, 3]).
+	size mismatch for lstm.weight_hh_l0: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([160, 40]).
+	size mismatch for lstm.bias_ih_l0: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+	size mismatch for lstm.bias_hh_l0: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+	size mismatch for lstm.weight_ih_l1: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([160, 40]).
+	size mismatch for lstm.weight_hh_l1: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([160, 40]).
+	size mismatch for lstm.bias_ih_l1: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+	size mismatch for lstm.bias_hh_l1: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+	size mismatch for fc.weight: copying a param with shape torch.Size([3, 10]) from checkpoint, the shape in current model is torch.Size([3, 40]).
+2025-04-23 12:17:02,256 - app.video_processor - ERROR - Traceback (most recent call last):
+  File "c:\Users\hadif\pojectt\project490\web_app\app\video_processor.py", line 649, in _init_model
+    self.lstm_model.load_state_dict(checkpoint['model_state_dict'])
+  File "C:\Users\hadif\pojectt\project490\.venv\lib\site-packages\torch\nn\modules\module.py", line 2581, in load_state_dict
+    raise RuntimeError(
+RuntimeError: Error(s) in loading state_dict for LSTMPredictor:
+	size mismatch for lstm.weight_ih_l0: copying a param with shape torch.Size([40, 3]) from checkpoint, the shape in current model is torch.Size([160, 3]).
+	size mismatch for lstm.weight_hh_l0: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([160, 40]).
+	size mismatch for lstm.bias_ih_l0: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+	size mismatch for lstm.bias_hh_l0: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+	size mismatch for lstm.weight_ih_l1: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([160, 40]).
+	size mismatch for lstm.weight_hh_l1: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([160, 40]).
+	size mismatch for lstm.bias_ih_l1: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+	size mismatch for lstm.bias_hh_l1: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+	size mismatch for fc.weight: copying a param with shape torch.Size([3, 10]) from checkpoint, the shape in current model is torch.Size([3, 40]).
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "c:\Users\hadif\pojectt\project490\web_app\app\video_processor.py", line 611, in __init__
+    self._init_model()
+  File "c:\Users\hadif\pojectt\project490\web_app\app\video_processor.py", line 667, in _init_model
+    raise RuntimeError(f"Error during initialization: {str(e)}")
+RuntimeError: Error during initialization: Error(s) in loading state_dict for LSTMPredictor:
+	size mismatch for lstm.weight_ih_l0: copying a param with shape torch.Size([40, 3]) from checkpoint, the shape in current model is torch.Size([160, 3]).
+	size mismatch for lstm.weight_hh_l0: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([160, 40]).
+	size mismatch for lstm.bias_ih_l0: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+	size mismatch for lstm.bias_hh_l0: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+	size mismatch for lstm.weight_ih_l1: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([160, 40]).
+	size mismatch for lstm.weight_hh_l1: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([160, 40]).
+	size mismatch for lstm.bias_ih_l1: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+	size mismatch for lstm.bias_hh_l1: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+	size mismatch for fc.weight: copying a param with shape torch.Size([3, 10]) from checkpoint, the shape in current model is torch.Size([3, 40]).
+
+2025-04-23 12:17:02,258 - app - ERROR - Error processing upload: Error during initialization: Error(s) in loading state_dict for LSTMPredictor:
+	size mismatch for lstm.weight_ih_l0: copying a param with shape torch.Size([40, 3]) from checkpoint, the shape in current model is torch.Size([160, 3]).
+	size mismatch for lstm.weight_hh_l0: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([160, 40]).
+	size mismatch for lstm.bias_ih_l0: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+	size mismatch for lstm.bias_hh_l0: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+	size mismatch for lstm.weight_ih_l1: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([160, 40]).
+	size mismatch for lstm.weight_hh_l1: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([160, 40]).
+	size mismatch for lstm.bias_ih_l1: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+	size mismatch for lstm.bias_hh_l1: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+	size mismatch for fc.weight: copying a param with shape torch.Size([3, 10]) from checkpoint, the shape in current model is torch.Size([3, 40]).
+2025-04-23 12:17:02,258 - app - ERROR - Traceback (most recent call last):
+  File "c:\Users\hadif\pojectt\project490\web_app\app\video_processor.py", line 649, in _init_model
+    self.lstm_model.load_state_dict(checkpoint['model_state_dict'])
+  File "C:\Users\hadif\pojectt\project490\.venv\lib\site-packages\torch\nn\modules\module.py", line 2581, in load_state_dict
+    raise RuntimeError(
+RuntimeError: Error(s) in loading state_dict for LSTMPredictor:
+	size mismatch for lstm.weight_ih_l0: copying a param with shape torch.Size([40, 3]) from checkpoint, the shape in current model is torch.Size([160, 3]).
+	size mismatch for lstm.weight_hh_l0: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([160, 40]).
+	size mismatch for lstm.bias_ih_l0: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+	size mismatch for lstm.bias_hh_l0: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+	size mismatch for lstm.weight_ih_l1: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([160, 40]).
+	size mismatch for lstm.weight_hh_l1: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([160, 40]).
+	size mismatch for lstm.bias_ih_l1: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+	size mismatch for lstm.bias_hh_l1: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+	size mismatch for fc.weight: copying a param with shape torch.Size([3, 10]) from checkpoint, the shape in current model is torch.Size([3, 40]).
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "c:\Users\hadif\pojectt\project490\web_app\app\routes.py", line 114, in upload_file
+    processor = VideoProcessor(
+  File "c:\Users\hadif\pojectt\project490\web_app\app\video_processor.py", line 611, in __init__
+    self._init_model()
+  File "c:\Users\hadif\pojectt\project490\web_app\app\video_processor.py", line 667, in _init_model
+    raise RuntimeError(f"Error during initialization: {str(e)}")
+RuntimeError: Error during initialization: Error(s) in loading state_dict for LSTMPredictor:
+	size mismatch for lstm.weight_ih_l0: copying a param with shape torch.Size([40, 3]) from checkpoint, the shape in current model is torch.Size([160, 3]).
+	size mismatch for lstm.weight_hh_l0: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([160, 40]).
+	size mismatch for lstm.bias_ih_l0: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+	size mismatch for lstm.bias_hh_l0: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+	size mismatch for lstm.weight_ih_l1: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([160, 40]).
+	size mismatch for lstm.weight_hh_l1: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([160, 40]).
+	size mismatch for lstm.bias_ih_l1: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+	size mismatch for lstm.bias_hh_l1: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+	size mismatch for fc.weight: copying a param with shape torch.Size([3, 10]) from checkpoint, the shape in current model is torch.Size([3, 40]).
+
+2025-04-23 12:17:02,264 - werkzeug - INFO - 127.0.0.1 - - [23/Apr/2025 12:17:02] "[35m[1mPOST /upload HTTP/1.1[0m" 500 -
+2025-04-23 12:19:03,216 - werkzeug - INFO -  * Detected change in 'c:\\Users\\hadif\\pojectt\\project490\\web_app\\app\\video_processor.py', reloading
+2025-04-23 12:19:04,504 - werkzeug - INFO -  * Restarting with stat
+2025-04-23 12:19:17,215 - app.video_processor - INFO - Using device: cpu
+2025-04-23 12:19:17,247 - werkzeug - WARNING -  * Debugger is active!
+2025-04-23 12:19:17,258 - werkzeug - INFO -  * Debugger PIN: 120-859-130
+2025-04-23 12:19:41,212 - werkzeug - INFO -  * Detected change in 'c:\\Users\\hadif\\pojectt\\project490\\web_app\\app\\video_processor.py', reloading
+2025-04-23 12:19:42,757 - werkzeug - INFO -  * Restarting with stat
+2025-04-23 12:20:22,545 - app.video_processor - INFO - Using device: cpu
+2025-04-23 12:20:22,618 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://10.169.18.142:5000
+2025-04-23 12:20:22,618 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2025-04-23 12:20:22,624 - werkzeug - INFO -  * Restarting with stat
+2025-04-23 12:20:35,251 - app.video_processor - INFO - Using device: cpu
+2025-04-23 12:20:35,275 - werkzeug - WARNING -  * Debugger is active!
+2025-04-23 12:20:35,292 - werkzeug - INFO -  * Debugger PIN: 120-859-130
+2025-04-23 12:20:38,840 - werkzeug - INFO - 127.0.0.1 - - [23/Apr/2025 12:20:38] "GET / HTTP/1.1" 200 -
+2025-04-23 12:20:55,678 - app.video_processor - INFO - Initializing VideoProcessor with: video_path=uploads\621f1374-1908-43bb-a1d6-f08bfd192438\firstjetvideo.mp4, model_path=uploads\621f1374-1908-43bb-a1d6-f08bfd192438\jet_lstm_model.pt
+2025-04-23 12:20:55,678 - app.video_processor - INFO - Loading object detection model...
+2025-04-23 12:20:57,022 - app.video_processor - INFO - Object detection model loaded successfully
+2025-04-23 12:20:57,025 - app.video_processor - INFO - Loading LSTM model from uploads\621f1374-1908-43bb-a1d6-f08bfd192438\jet_lstm_model.pt...
+2025-04-23 12:20:57,067 - app.video_processor - WARNING - Strict loading failed, attempting non-strict load: Error(s) in loading state_dict for LSTMPredictor:
+	Missing key(s) in state_dict: "hidden_to_fc.weight", "hidden_to_fc.bias". 
+	size mismatch for lstm.weight_ih_l0: copying a param with shape torch.Size([40, 3]) from checkpoint, the shape in current model is torch.Size([160, 3]).
+	size mismatch for lstm.weight_hh_l0: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([160, 40]).
+	size mismatch for lstm.bias_ih_l0: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+	size mismatch for lstm.bias_hh_l0: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+	size mismatch for lstm.weight_ih_l1: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([160, 40]).
+	size mismatch for lstm.weight_hh_l1: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([160, 40]).
+	size mismatch for lstm.bias_ih_l1: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+	size mismatch for lstm.bias_hh_l1: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+2025-04-23 12:20:57,067 - app.video_processor - ERROR - Error initializing models: Error(s) in loading state_dict for LSTMPredictor:
+	size mismatch for lstm.weight_ih_l0: copying a param with shape torch.Size([40, 3]) from checkpoint, the shape in current model is torch.Size([160, 3]).
+	size mismatch for lstm.weight_hh_l0: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([160, 40]).
+	size mismatch for lstm.bias_ih_l0: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+	size mismatch for lstm.bias_hh_l0: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+	size mismatch for lstm.weight_ih_l1: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([160, 40]).
+	size mismatch for lstm.weight_hh_l1: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([160, 40]).
+	size mismatch for lstm.bias_ih_l1: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+	size mismatch for lstm.bias_hh_l1: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+2025-04-23 12:20:57,075 - app.video_processor - ERROR - Traceback (most recent call last):
+  File "c:\Users\hadif\pojectt\project490\web_app\app\video_processor.py", line 658, in _init_model
+    self.lstm_model.load_state_dict(checkpoint['model_state_dict'], strict=True)
+  File "C:\Users\hadif\pojectt\project490\.venv\lib\site-packages\torch\nn\modules\module.py", line 2581, in load_state_dict
+    raise RuntimeError(
+RuntimeError: Error(s) in loading state_dict for LSTMPredictor:
+	Missing key(s) in state_dict: "hidden_to_fc.weight", "hidden_to_fc.bias". 
+	size mismatch for lstm.weight_ih_l0: copying a param with shape torch.Size([40, 3]) from checkpoint, the shape in current model is torch.Size([160, 3]).
+	size mismatch for lstm.weight_hh_l0: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([160, 40]).
+	size mismatch for lstm.bias_ih_l0: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+	size mismatch for lstm.bias_hh_l0: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+	size mismatch for lstm.weight_ih_l1: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([160, 40]).
+	size mismatch for lstm.weight_hh_l1: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([160, 40]).
+	size mismatch for lstm.bias_ih_l1: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+	size mismatch for lstm.bias_hh_l1: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "c:\Users\hadif\pojectt\project490\web_app\app\video_processor.py", line 661, in _init_model
+    self.lstm_model.load_state_dict(checkpoint['model_state_dict'], strict=False)
+  File "C:\Users\hadif\pojectt\project490\.venv\lib\site-packages\torch\nn\modules\module.py", line 2581, in load_state_dict
+    raise RuntimeError(
+RuntimeError: Error(s) in loading state_dict for LSTMPredictor:
+	size mismatch for lstm.weight_ih_l0: copying a param with shape torch.Size([40, 3]) from checkpoint, the shape in current model is torch.Size([160, 3]).
+	size mismatch for lstm.weight_hh_l0: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([160, 40]).
+	size mismatch for lstm.bias_ih_l0: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+	size mismatch for lstm.bias_hh_l0: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+	size mismatch for lstm.weight_ih_l1: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([160, 40]).
+	size mismatch for lstm.weight_hh_l1: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([160, 40]).
+	size mismatch for lstm.bias_ih_l1: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+	size mismatch for lstm.bias_hh_l1: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+
+2025-04-23 12:20:57,075 - app.video_processor - ERROR - Error initializing models: Error during initialization: Error(s) in loading state_dict for LSTMPredictor:
+	size mismatch for lstm.weight_ih_l0: copying a param with shape torch.Size([40, 3]) from checkpoint, the shape in current model is torch.Size([160, 3]).
+	size mismatch for lstm.weight_hh_l0: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([160, 40]).
+	size mismatch for lstm.bias_ih_l0: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+	size mismatch for lstm.bias_hh_l0: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+	size mismatch for lstm.weight_ih_l1: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([160, 40]).
+	size mismatch for lstm.weight_hh_l1: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([160, 40]).
+	size mismatch for lstm.bias_ih_l1: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+	size mismatch for lstm.bias_hh_l1: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+2025-04-23 12:20:57,075 - app.video_processor - ERROR - Traceback (most recent call last):
+  File "c:\Users\hadif\pojectt\project490\web_app\app\video_processor.py", line 658, in _init_model
+    self.lstm_model.load_state_dict(checkpoint['model_state_dict'], strict=True)
+  File "C:\Users\hadif\pojectt\project490\.venv\lib\site-packages\torch\nn\modules\module.py", line 2581, in load_state_dict
+    raise RuntimeError(
+RuntimeError: Error(s) in loading state_dict for LSTMPredictor:
+	Missing key(s) in state_dict: "hidden_to_fc.weight", "hidden_to_fc.bias". 
+	size mismatch for lstm.weight_ih_l0: copying a param with shape torch.Size([40, 3]) from checkpoint, the shape in current model is torch.Size([160, 3]).
+	size mismatch for lstm.weight_hh_l0: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([160, 40]).
+	size mismatch for lstm.bias_ih_l0: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+	size mismatch for lstm.bias_hh_l0: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+	size mismatch for lstm.weight_ih_l1: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([160, 40]).
+	size mismatch for lstm.weight_hh_l1: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([160, 40]).
+	size mismatch for lstm.bias_ih_l1: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+	size mismatch for lstm.bias_hh_l1: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "c:\Users\hadif\pojectt\project490\web_app\app\video_processor.py", line 661, in _init_model
+    self.lstm_model.load_state_dict(checkpoint['model_state_dict'], strict=False)
+  File "C:\Users\hadif\pojectt\project490\.venv\lib\site-packages\torch\nn\modules\module.py", line 2581, in load_state_dict
+    raise RuntimeError(
+RuntimeError: Error(s) in loading state_dict for LSTMPredictor:
+	size mismatch for lstm.weight_ih_l0: copying a param with shape torch.Size([40, 3]) from checkpoint, the shape in current model is torch.Size([160, 3]).
+	size mismatch for lstm.weight_hh_l0: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([160, 40]).
+	size mismatch for lstm.bias_ih_l0: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+	size mismatch for lstm.bias_hh_l0: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+	size mismatch for lstm.weight_ih_l1: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([160, 40]).
+	size mismatch for lstm.weight_hh_l1: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([160, 40]).
+	size mismatch for lstm.bias_ih_l1: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+	size mismatch for lstm.bias_hh_l1: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "c:\Users\hadif\pojectt\project490\web_app\app\video_processor.py", line 688, in _init_model
+    raise RuntimeError(f"Error during initialization: {str(e)}")
+RuntimeError: Error during initialization: Error(s) in loading state_dict for LSTMPredictor:
+	size mismatch for lstm.weight_ih_l0: copying a param with shape torch.Size([40, 3]) from checkpoint, the shape in current model is torch.Size([160, 3]).
+	size mismatch for lstm.weight_hh_l0: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([160, 40]).
+	size mismatch for lstm.bias_ih_l0: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+	size mismatch for lstm.bias_hh_l0: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+	size mismatch for lstm.weight_ih_l1: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([160, 40]).
+	size mismatch for lstm.weight_hh_l1: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([160, 40]).
+	size mismatch for lstm.bias_ih_l1: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+	size mismatch for lstm.bias_hh_l1: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+
+2025-04-23 12:20:57,079 - app.video_processor - ERROR - Error during initialization: Error during initialization: Error(s) in loading state_dict for LSTMPredictor:
+	size mismatch for lstm.weight_ih_l0: copying a param with shape torch.Size([40, 3]) from checkpoint, the shape in current model is torch.Size([160, 3]).
+	size mismatch for lstm.weight_hh_l0: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([160, 40]).
+	size mismatch for lstm.bias_ih_l0: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+	size mismatch for lstm.bias_hh_l0: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+	size mismatch for lstm.weight_ih_l1: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([160, 40]).
+	size mismatch for lstm.weight_hh_l1: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([160, 40]).
+	size mismatch for lstm.bias_ih_l1: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+	size mismatch for lstm.bias_hh_l1: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+2025-04-23 12:20:57,079 - app.video_processor - ERROR - Traceback (most recent call last):
+  File "c:\Users\hadif\pojectt\project490\web_app\app\video_processor.py", line 658, in _init_model
+    self.lstm_model.load_state_dict(checkpoint['model_state_dict'], strict=True)
+  File "C:\Users\hadif\pojectt\project490\.venv\lib\site-packages\torch\nn\modules\module.py", line 2581, in load_state_dict
+    raise RuntimeError(
+RuntimeError: Error(s) in loading state_dict for LSTMPredictor:
+	Missing key(s) in state_dict: "hidden_to_fc.weight", "hidden_to_fc.bias". 
+	size mismatch for lstm.weight_ih_l0: copying a param with shape torch.Size([40, 3]) from checkpoint, the shape in current model is torch.Size([160, 3]).
+	size mismatch for lstm.weight_hh_l0: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([160, 40]).
+	size mismatch for lstm.bias_ih_l0: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+	size mismatch for lstm.bias_hh_l0: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+	size mismatch for lstm.weight_ih_l1: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([160, 40]).
+	size mismatch for lstm.weight_hh_l1: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([160, 40]).
+	size mismatch for lstm.bias_ih_l1: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+	size mismatch for lstm.bias_hh_l1: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "c:\Users\hadif\pojectt\project490\web_app\app\video_processor.py", line 661, in _init_model
+    self.lstm_model.load_state_dict(checkpoint['model_state_dict'], strict=False)
+  File "C:\Users\hadif\pojectt\project490\.venv\lib\site-packages\torch\nn\modules\module.py", line 2581, in load_state_dict
+    raise RuntimeError(
+RuntimeError: Error(s) in loading state_dict for LSTMPredictor:
+	size mismatch for lstm.weight_ih_l0: copying a param with shape torch.Size([40, 3]) from checkpoint, the shape in current model is torch.Size([160, 3]).
+	size mismatch for lstm.weight_hh_l0: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([160, 40]).
+	size mismatch for lstm.bias_ih_l0: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+	size mismatch for lstm.bias_hh_l0: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+	size mismatch for lstm.weight_ih_l1: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([160, 40]).
+	size mismatch for lstm.weight_hh_l1: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([160, 40]).
+	size mismatch for lstm.bias_ih_l1: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+	size mismatch for lstm.bias_hh_l1: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "c:\Users\hadif\pojectt\project490\web_app\app\video_processor.py", line 618, in __init__
+    self._init_model()
+  File "c:\Users\hadif\pojectt\project490\web_app\app\video_processor.py", line 688, in _init_model
+    raise RuntimeError(f"Error during initialization: {str(e)}")
+RuntimeError: Error during initialization: Error(s) in loading state_dict for LSTMPredictor:
+	size mismatch for lstm.weight_ih_l0: copying a param with shape torch.Size([40, 3]) from checkpoint, the shape in current model is torch.Size([160, 3]).
+	size mismatch for lstm.weight_hh_l0: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([160, 40]).
+	size mismatch for lstm.bias_ih_l0: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+	size mismatch for lstm.bias_hh_l0: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+	size mismatch for lstm.weight_ih_l1: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([160, 40]).
+	size mismatch for lstm.weight_hh_l1: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([160, 40]).
+	size mismatch for lstm.bias_ih_l1: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+	size mismatch for lstm.bias_hh_l1: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+
+2025-04-23 12:20:57,079 - app - ERROR - Error processing upload: Error during initialization: Error(s) in loading state_dict for LSTMPredictor:
+	size mismatch for lstm.weight_ih_l0: copying a param with shape torch.Size([40, 3]) from checkpoint, the shape in current model is torch.Size([160, 3]).
+	size mismatch for lstm.weight_hh_l0: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([160, 40]).
+	size mismatch for lstm.bias_ih_l0: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+	size mismatch for lstm.bias_hh_l0: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+	size mismatch for lstm.weight_ih_l1: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([160, 40]).
+	size mismatch for lstm.weight_hh_l1: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([160, 40]).
+	size mismatch for lstm.bias_ih_l1: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+	size mismatch for lstm.bias_hh_l1: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+2025-04-23 12:20:57,079 - app - ERROR - Traceback (most recent call last):
+  File "c:\Users\hadif\pojectt\project490\web_app\app\video_processor.py", line 658, in _init_model
+    self.lstm_model.load_state_dict(checkpoint['model_state_dict'], strict=True)
+  File "C:\Users\hadif\pojectt\project490\.venv\lib\site-packages\torch\nn\modules\module.py", line 2581, in load_state_dict
+    raise RuntimeError(
+RuntimeError: Error(s) in loading state_dict for LSTMPredictor:
+	Missing key(s) in state_dict: "hidden_to_fc.weight", "hidden_to_fc.bias". 
+	size mismatch for lstm.weight_ih_l0: copying a param with shape torch.Size([40, 3]) from checkpoint, the shape in current model is torch.Size([160, 3]).
+	size mismatch for lstm.weight_hh_l0: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([160, 40]).
+	size mismatch for lstm.bias_ih_l0: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+	size mismatch for lstm.bias_hh_l0: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+	size mismatch for lstm.weight_ih_l1: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([160, 40]).
+	size mismatch for lstm.weight_hh_l1: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([160, 40]).
+	size mismatch for lstm.bias_ih_l1: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+	size mismatch for lstm.bias_hh_l1: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "c:\Users\hadif\pojectt\project490\web_app\app\video_processor.py", line 661, in _init_model
+    self.lstm_model.load_state_dict(checkpoint['model_state_dict'], strict=False)
+  File "C:\Users\hadif\pojectt\project490\.venv\lib\site-packages\torch\nn\modules\module.py", line 2581, in load_state_dict
+    raise RuntimeError(
+RuntimeError: Error(s) in loading state_dict for LSTMPredictor:
+	size mismatch for lstm.weight_ih_l0: copying a param with shape torch.Size([40, 3]) from checkpoint, the shape in current model is torch.Size([160, 3]).
+	size mismatch for lstm.weight_hh_l0: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([160, 40]).
+	size mismatch for lstm.bias_ih_l0: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+	size mismatch for lstm.bias_hh_l0: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+	size mismatch for lstm.weight_ih_l1: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([160, 40]).
+	size mismatch for lstm.weight_hh_l1: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([160, 40]).
+	size mismatch for lstm.bias_ih_l1: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+	size mismatch for lstm.bias_hh_l1: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "c:\Users\hadif\pojectt\project490\web_app\app\routes.py", line 114, in upload_file
+    processor = VideoProcessor(
+  File "c:\Users\hadif\pojectt\project490\web_app\app\video_processor.py", line 618, in __init__
+    self._init_model()
+  File "c:\Users\hadif\pojectt\project490\web_app\app\video_processor.py", line 688, in _init_model
+    raise RuntimeError(f"Error during initialization: {str(e)}")
+RuntimeError: Error during initialization: Error(s) in loading state_dict for LSTMPredictor:
+	size mismatch for lstm.weight_ih_l0: copying a param with shape torch.Size([40, 3]) from checkpoint, the shape in current model is torch.Size([160, 3]).
+	size mismatch for lstm.weight_hh_l0: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([160, 40]).
+	size mismatch for lstm.bias_ih_l0: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+	size mismatch for lstm.bias_hh_l0: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+	size mismatch for lstm.weight_ih_l1: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([160, 40]).
+	size mismatch for lstm.weight_hh_l1: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([160, 40]).
+	size mismatch for lstm.bias_ih_l1: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+	size mismatch for lstm.bias_hh_l1: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+
+2025-04-23 12:20:57,101 - werkzeug - INFO - 127.0.0.1 - - [23/Apr/2025 12:20:57] "[35m[1mPOST /upload HTTP/1.1[0m" 500 -
+2025-04-23 12:23:32,863 - werkzeug - INFO -  * Detected change in 'c:\\Users\\hadif\\pojectt\\project490\\web_app\\app\\video_processor.py', reloading
+2025-04-23 12:23:34,209 - werkzeug - INFO -  * Restarting with stat
+2025-04-23 12:23:46,468 - app.video_processor - INFO - Using device: cpu
+2025-04-23 12:23:46,498 - werkzeug - WARNING -  * Debugger is active!
+2025-04-23 12:23:46,508 - werkzeug - INFO -  * Debugger PIN: 120-859-130
+2025-04-23 12:25:12,065 - app.video_processor - INFO - Using device: cpu
+2025-04-23 12:25:12,126 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://10.169.18.142:5000
+2025-04-23 12:25:12,126 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2025-04-23 12:25:12,132 - werkzeug - INFO -  * Restarting with stat
+2025-04-23 12:25:25,374 - app.video_processor - INFO - Using device: cpu
+2025-04-23 12:25:25,429 - werkzeug - WARNING -  * Debugger is active!
+2025-04-23 12:25:25,440 - werkzeug - INFO -  * Debugger PIN: 120-859-130
+2025-04-23 12:25:26,044 - werkzeug - INFO - 127.0.0.1 - - [23/Apr/2025 12:25:26] "GET / HTTP/1.1" 200 -
+2025-04-23 12:25:40,839 - app.video_processor - INFO - Initializing VideoProcessor with: video_path=uploads\fc33c1cc-6053-434e-b76e-9072a663742b\firstjetvideo.mp4, model_path=uploads\fc33c1cc-6053-434e-b76e-9072a663742b\jet_lstm_model.pt
+2025-04-23 12:25:40,840 - app.video_processor - INFO - Loading object detection model...
+2025-04-23 12:25:42,166 - app.video_processor - INFO - Object detection model loaded successfully
+2025-04-23 12:25:42,166 - app.video_processor - INFO - Loading LSTM model from uploads\fc33c1cc-6053-434e-b76e-9072a663742b\jet_lstm_model.pt...
+2025-04-23 12:25:42,208 - app.video_processor - WARNING - Strict loading failed, attempting non-strict load: Error(s) in loading state_dict for LSTMPredictor:
+	size mismatch for lstm.weight_ih_l0: copying a param with shape torch.Size([40, 3]) from checkpoint, the shape in current model is torch.Size([160, 3]).
+	size mismatch for lstm.weight_hh_l0: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([160, 40]).
+	size mismatch for lstm.bias_ih_l0: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+	size mismatch for lstm.bias_hh_l0: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+	size mismatch for lstm.weight_ih_l1: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([160, 40]).
+	size mismatch for lstm.weight_hh_l1: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([160, 40]).
+	size mismatch for lstm.bias_ih_l1: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+	size mismatch for lstm.bias_hh_l1: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+2025-04-23 12:25:42,216 - app.video_processor - ERROR - Error initializing models: Error(s) in loading state_dict for LSTMPredictor:
+	size mismatch for lstm.weight_ih_l0: copying a param with shape torch.Size([40, 3]) from checkpoint, the shape in current model is torch.Size([160, 3]).
+	size mismatch for lstm.weight_hh_l0: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([160, 40]).
+	size mismatch for lstm.bias_ih_l0: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+	size mismatch for lstm.bias_hh_l0: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+	size mismatch for lstm.weight_ih_l1: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([160, 40]).
+	size mismatch for lstm.weight_hh_l1: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([160, 40]).
+	size mismatch for lstm.bias_ih_l1: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+	size mismatch for lstm.bias_hh_l1: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+2025-04-23 12:25:42,216 - app.video_processor - ERROR - Traceback (most recent call last):
+  File "c:\Users\hadif\pojectt\project490\web_app\app\video_processor.py", line 656, in _init_model
+    self.lstm_model.load_state_dict(checkpoint['model_state_dict'], strict=True)
+  File "C:\Users\hadif\pojectt\project490\.venv\lib\site-packages\torch\nn\modules\module.py", line 2581, in load_state_dict
+    raise RuntimeError(
+RuntimeError: Error(s) in loading state_dict for LSTMPredictor:
+	size mismatch for lstm.weight_ih_l0: copying a param with shape torch.Size([40, 3]) from checkpoint, the shape in current model is torch.Size([160, 3]).
+	size mismatch for lstm.weight_hh_l0: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([160, 40]).
+	size mismatch for lstm.bias_ih_l0: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+	size mismatch for lstm.bias_hh_l0: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+	size mismatch for lstm.weight_ih_l1: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([160, 40]).
+	size mismatch for lstm.weight_hh_l1: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([160, 40]).
+	size mismatch for lstm.bias_ih_l1: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+	size mismatch for lstm.bias_hh_l1: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "c:\Users\hadif\pojectt\project490\web_app\app\video_processor.py", line 659, in _init_model
+    self.lstm_model.load_state_dict(checkpoint['model_state_dict'], strict=False)
+  File "C:\Users\hadif\pojectt\project490\.venv\lib\site-packages\torch\nn\modules\module.py", line 2581, in load_state_dict
+    raise RuntimeError(
+RuntimeError: Error(s) in loading state_dict for LSTMPredictor:
+	size mismatch for lstm.weight_ih_l0: copying a param with shape torch.Size([40, 3]) from checkpoint, the shape in current model is torch.Size([160, 3]).
+	size mismatch for lstm.weight_hh_l0: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([160, 40]).
+	size mismatch for lstm.bias_ih_l0: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+	size mismatch for lstm.bias_hh_l0: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+	size mismatch for lstm.weight_ih_l1: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([160, 40]).
+	size mismatch for lstm.weight_hh_l1: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([160, 40]).
+	size mismatch for lstm.bias_ih_l1: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+	size mismatch for lstm.bias_hh_l1: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+
+2025-04-23 12:25:42,225 - app.video_processor - ERROR - Error initializing models: Error during initialization: Error(s) in loading state_dict for LSTMPredictor:
+	size mismatch for lstm.weight_ih_l0: copying a param with shape torch.Size([40, 3]) from checkpoint, the shape in current model is torch.Size([160, 3]).
+	size mismatch for lstm.weight_hh_l0: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([160, 40]).
+	size mismatch for lstm.bias_ih_l0: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+	size mismatch for lstm.bias_hh_l0: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+	size mismatch for lstm.weight_ih_l1: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([160, 40]).
+	size mismatch for lstm.weight_hh_l1: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([160, 40]).
+	size mismatch for lstm.bias_ih_l1: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+	size mismatch for lstm.bias_hh_l1: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+2025-04-23 12:25:42,226 - app.video_processor - ERROR - Traceback (most recent call last):
+  File "c:\Users\hadif\pojectt\project490\web_app\app\video_processor.py", line 656, in _init_model
+    self.lstm_model.load_state_dict(checkpoint['model_state_dict'], strict=True)
+  File "C:\Users\hadif\pojectt\project490\.venv\lib\site-packages\torch\nn\modules\module.py", line 2581, in load_state_dict
+    raise RuntimeError(
+RuntimeError: Error(s) in loading state_dict for LSTMPredictor:
+	size mismatch for lstm.weight_ih_l0: copying a param with shape torch.Size([40, 3]) from checkpoint, the shape in current model is torch.Size([160, 3]).
+	size mismatch for lstm.weight_hh_l0: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([160, 40]).
+	size mismatch for lstm.bias_ih_l0: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+	size mismatch for lstm.bias_hh_l0: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+	size mismatch for lstm.weight_ih_l1: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([160, 40]).
+	size mismatch for lstm.weight_hh_l1: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([160, 40]).
+	size mismatch for lstm.bias_ih_l1: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+	size mismatch for lstm.bias_hh_l1: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "c:\Users\hadif\pojectt\project490\web_app\app\video_processor.py", line 659, in _init_model
+    self.lstm_model.load_state_dict(checkpoint['model_state_dict'], strict=False)
+  File "C:\Users\hadif\pojectt\project490\.venv\lib\site-packages\torch\nn\modules\module.py", line 2581, in load_state_dict
+    raise RuntimeError(
+RuntimeError: Error(s) in loading state_dict for LSTMPredictor:
+	size mismatch for lstm.weight_ih_l0: copying a param with shape torch.Size([40, 3]) from checkpoint, the shape in current model is torch.Size([160, 3]).
+	size mismatch for lstm.weight_hh_l0: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([160, 40]).
+	size mismatch for lstm.bias_ih_l0: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+	size mismatch for lstm.bias_hh_l0: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+	size mismatch for lstm.weight_ih_l1: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([160, 40]).
+	size mismatch for lstm.weight_hh_l1: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([160, 40]).
+	size mismatch for lstm.bias_ih_l1: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+	size mismatch for lstm.bias_hh_l1: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "c:\Users\hadif\pojectt\project490\web_app\app\video_processor.py", line 686, in _init_model
+    raise RuntimeError(f"Error during initialization: {str(e)}")
+RuntimeError: Error during initialization: Error(s) in loading state_dict for LSTMPredictor:
+	size mismatch for lstm.weight_ih_l0: copying a param with shape torch.Size([40, 3]) from checkpoint, the shape in current model is torch.Size([160, 3]).
+	size mismatch for lstm.weight_hh_l0: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([160, 40]).
+	size mismatch for lstm.bias_ih_l0: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+	size mismatch for lstm.bias_hh_l0: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+	size mismatch for lstm.weight_ih_l1: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([160, 40]).
+	size mismatch for lstm.weight_hh_l1: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([160, 40]).
+	size mismatch for lstm.bias_ih_l1: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+	size mismatch for lstm.bias_hh_l1: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+
+2025-04-23 12:25:42,226 - app.video_processor - ERROR - Error during initialization: Error during initialization: Error(s) in loading state_dict for LSTMPredictor:
+	size mismatch for lstm.weight_ih_l0: copying a param with shape torch.Size([40, 3]) from checkpoint, the shape in current model is torch.Size([160, 3]).
+	size mismatch for lstm.weight_hh_l0: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([160, 40]).
+	size mismatch for lstm.bias_ih_l0: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+	size mismatch for lstm.bias_hh_l0: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+	size mismatch for lstm.weight_ih_l1: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([160, 40]).
+	size mismatch for lstm.weight_hh_l1: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([160, 40]).
+	size mismatch for lstm.bias_ih_l1: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+	size mismatch for lstm.bias_hh_l1: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+2025-04-23 12:25:42,233 - app.video_processor - ERROR - Traceback (most recent call last):
+  File "c:\Users\hadif\pojectt\project490\web_app\app\video_processor.py", line 656, in _init_model
+    self.lstm_model.load_state_dict(checkpoint['model_state_dict'], strict=True)
+  File "C:\Users\hadif\pojectt\project490\.venv\lib\site-packages\torch\nn\modules\module.py", line 2581, in load_state_dict
+    raise RuntimeError(
+RuntimeError: Error(s) in loading state_dict for LSTMPredictor:
+	size mismatch for lstm.weight_ih_l0: copying a param with shape torch.Size([40, 3]) from checkpoint, the shape in current model is torch.Size([160, 3]).
+	size mismatch for lstm.weight_hh_l0: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([160, 40]).
+	size mismatch for lstm.bias_ih_l0: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+	size mismatch for lstm.bias_hh_l0: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+	size mismatch for lstm.weight_ih_l1: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([160, 40]).
+	size mismatch for lstm.weight_hh_l1: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([160, 40]).
+	size mismatch for lstm.bias_ih_l1: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+	size mismatch for lstm.bias_hh_l1: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "c:\Users\hadif\pojectt\project490\web_app\app\video_processor.py", line 659, in _init_model
+    self.lstm_model.load_state_dict(checkpoint['model_state_dict'], strict=False)
+  File "C:\Users\hadif\pojectt\project490\.venv\lib\site-packages\torch\nn\modules\module.py", line 2581, in load_state_dict
+    raise RuntimeError(
+RuntimeError: Error(s) in loading state_dict for LSTMPredictor:
+	size mismatch for lstm.weight_ih_l0: copying a param with shape torch.Size([40, 3]) from checkpoint, the shape in current model is torch.Size([160, 3]).
+	size mismatch for lstm.weight_hh_l0: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([160, 40]).
+	size mismatch for lstm.bias_ih_l0: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+	size mismatch for lstm.bias_hh_l0: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+	size mismatch for lstm.weight_ih_l1: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([160, 40]).
+	size mismatch for lstm.weight_hh_l1: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([160, 40]).
+	size mismatch for lstm.bias_ih_l1: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+	size mismatch for lstm.bias_hh_l1: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "c:\Users\hadif\pojectt\project490\web_app\app\video_processor.py", line 616, in __init__
+    self._init_model()
+  File "c:\Users\hadif\pojectt\project490\web_app\app\video_processor.py", line 686, in _init_model
+    raise RuntimeError(f"Error during initialization: {str(e)}")
+RuntimeError: Error during initialization: Error(s) in loading state_dict for LSTMPredictor:
+	size mismatch for lstm.weight_ih_l0: copying a param with shape torch.Size([40, 3]) from checkpoint, the shape in current model is torch.Size([160, 3]).
+	size mismatch for lstm.weight_hh_l0: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([160, 40]).
+	size mismatch for lstm.bias_ih_l0: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+	size mismatch for lstm.bias_hh_l0: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+	size mismatch for lstm.weight_ih_l1: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([160, 40]).
+	size mismatch for lstm.weight_hh_l1: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([160, 40]).
+	size mismatch for lstm.bias_ih_l1: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+	size mismatch for lstm.bias_hh_l1: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+
+2025-04-23 12:25:42,233 - app - ERROR - Error processing upload: Error during initialization: Error(s) in loading state_dict for LSTMPredictor:
+	size mismatch for lstm.weight_ih_l0: copying a param with shape torch.Size([40, 3]) from checkpoint, the shape in current model is torch.Size([160, 3]).
+	size mismatch for lstm.weight_hh_l0: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([160, 40]).
+	size mismatch for lstm.bias_ih_l0: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+	size mismatch for lstm.bias_hh_l0: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+	size mismatch for lstm.weight_ih_l1: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([160, 40]).
+	size mismatch for lstm.weight_hh_l1: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([160, 40]).
+	size mismatch for lstm.bias_ih_l1: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+	size mismatch for lstm.bias_hh_l1: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+2025-04-23 12:25:42,233 - app - ERROR - Traceback (most recent call last):
+  File "c:\Users\hadif\pojectt\project490\web_app\app\video_processor.py", line 656, in _init_model
+    self.lstm_model.load_state_dict(checkpoint['model_state_dict'], strict=True)
+  File "C:\Users\hadif\pojectt\project490\.venv\lib\site-packages\torch\nn\modules\module.py", line 2581, in load_state_dict
+    raise RuntimeError(
+RuntimeError: Error(s) in loading state_dict for LSTMPredictor:
+	size mismatch for lstm.weight_ih_l0: copying a param with shape torch.Size([40, 3]) from checkpoint, the shape in current model is torch.Size([160, 3]).
+	size mismatch for lstm.weight_hh_l0: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([160, 40]).
+	size mismatch for lstm.bias_ih_l0: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+	size mismatch for lstm.bias_hh_l0: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+	size mismatch for lstm.weight_ih_l1: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([160, 40]).
+	size mismatch for lstm.weight_hh_l1: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([160, 40]).
+	size mismatch for lstm.bias_ih_l1: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+	size mismatch for lstm.bias_hh_l1: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "c:\Users\hadif\pojectt\project490\web_app\app\video_processor.py", line 659, in _init_model
+    self.lstm_model.load_state_dict(checkpoint['model_state_dict'], strict=False)
+  File "C:\Users\hadif\pojectt\project490\.venv\lib\site-packages\torch\nn\modules\module.py", line 2581, in load_state_dict
+    raise RuntimeError(
+RuntimeError: Error(s) in loading state_dict for LSTMPredictor:
+	size mismatch for lstm.weight_ih_l0: copying a param with shape torch.Size([40, 3]) from checkpoint, the shape in current model is torch.Size([160, 3]).
+	size mismatch for lstm.weight_hh_l0: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([160, 40]).
+	size mismatch for lstm.bias_ih_l0: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+	size mismatch for lstm.bias_hh_l0: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+	size mismatch for lstm.weight_ih_l1: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([160, 40]).
+	size mismatch for lstm.weight_hh_l1: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([160, 40]).
+	size mismatch for lstm.bias_ih_l1: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+	size mismatch for lstm.bias_hh_l1: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "c:\Users\hadif\pojectt\project490\web_app\app\routes.py", line 114, in upload_file
+    processor = VideoProcessor(
+  File "c:\Users\hadif\pojectt\project490\web_app\app\video_processor.py", line 616, in __init__
+    self._init_model()
+  File "c:\Users\hadif\pojectt\project490\web_app\app\video_processor.py", line 686, in _init_model
+    raise RuntimeError(f"Error during initialization: {str(e)}")
+RuntimeError: Error during initialization: Error(s) in loading state_dict for LSTMPredictor:
+	size mismatch for lstm.weight_ih_l0: copying a param with shape torch.Size([40, 3]) from checkpoint, the shape in current model is torch.Size([160, 3]).
+	size mismatch for lstm.weight_hh_l0: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([160, 40]).
+	size mismatch for lstm.bias_ih_l0: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+	size mismatch for lstm.bias_hh_l0: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+	size mismatch for lstm.weight_ih_l1: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([160, 40]).
+	size mismatch for lstm.weight_hh_l1: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([160, 40]).
+	size mismatch for lstm.bias_ih_l1: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+	size mismatch for lstm.bias_hh_l1: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+
+2025-04-23 12:25:42,250 - werkzeug - INFO - 127.0.0.1 - - [23/Apr/2025 12:25:42] "[35m[1mPOST /upload HTTP/1.1[0m" 500 -
+2025-04-23 12:27:15,365 - werkzeug - INFO -  * Detected change in 'c:\\Users\\hadif\\pojectt\\project490\\web_app\\app\\video_processor.py', reloading
+2025-04-23 12:27:16,939 - werkzeug - INFO -  * Restarting with stat
+2025-04-23 12:27:30,791 - app.video_processor - INFO - Using device: cpu
+2025-04-23 12:28:40,811 - app.video_processor - INFO - Using device: cpu
+2025-04-23 12:45:36,053 - app.video_processor - INFO - Using device: cpu
+2025-04-23 12:49:04,477 - app.video_processor - INFO - Using device: cpu
+2025-04-23 12:49:04,566 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://10.169.18.142:5000
+2025-04-23 12:49:04,566 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2025-04-23 12:49:04,566 - werkzeug - INFO -  * Restarting with stat
+2025-04-23 12:49:18,581 - app.video_processor - INFO - Using device: cpu
+2025-04-23 12:49:18,614 - werkzeug - WARNING -  * Debugger is active!
+2025-04-23 12:49:18,624 - werkzeug - INFO -  * Debugger PIN: 120-859-130
+2025-04-23 12:49:19,017 - werkzeug - INFO - 127.0.0.1 - - [23/Apr/2025 12:49:19] "GET / HTTP/1.1" 200 -
+2025-04-23 12:49:53,130 - app.video_processor - INFO - Initializing VideoProcessor with: video_path=uploads\a03fa370-e7b7-49cf-ae8c-550fc4578152\firstjetvideo.mp4, model_path=uploads\a03fa370-e7b7-49cf-ae8c-550fc4578152\jet_lstm_model.pt
+2025-04-23 12:49:53,133 - app.video_processor - INFO - Loading object detection model...
+2025-04-23 12:49:54,563 - app.video_processor - INFO - Object detection model loaded successfully
+2025-04-23 12:49:54,563 - app.video_processor - INFO - Loading LSTM model from uploads\a03fa370-e7b7-49cf-ae8c-550fc4578152\jet_lstm_model.pt...
+2025-04-23 12:49:54,608 - app.video_processor - WARNING - Strict loading failed, attempting non-strict load: Error(s) in loading state_dict for LSTMPredictor:
+	Missing key(s) in state_dict: "hidden_to_fc.weight", "hidden_to_fc.bias". 
+	size mismatch for lstm.weight_ih_l0: copying a param with shape torch.Size([40, 3]) from checkpoint, the shape in current model is torch.Size([160, 3]).
+	size mismatch for lstm.weight_hh_l0: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([160, 40]).
+	size mismatch for lstm.bias_ih_l0: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+	size mismatch for lstm.bias_hh_l0: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+	size mismatch for lstm.weight_ih_l1: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([160, 40]).
+	size mismatch for lstm.weight_hh_l1: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([160, 40]).
+	size mismatch for lstm.bias_ih_l1: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+	size mismatch for lstm.bias_hh_l1: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+2025-04-23 12:49:54,612 - app.video_processor - ERROR - Error initializing models: Error(s) in loading state_dict for LSTMPredictor:
+	size mismatch for lstm.weight_ih_l0: copying a param with shape torch.Size([40, 3]) from checkpoint, the shape in current model is torch.Size([160, 3]).
+	size mismatch for lstm.weight_hh_l0: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([160, 40]).
+	size mismatch for lstm.bias_ih_l0: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+	size mismatch for lstm.bias_hh_l0: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+	size mismatch for lstm.weight_ih_l1: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([160, 40]).
+	size mismatch for lstm.weight_hh_l1: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([160, 40]).
+	size mismatch for lstm.bias_ih_l1: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+	size mismatch for lstm.bias_hh_l1: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+2025-04-23 12:49:54,617 - app.video_processor - ERROR - Traceback (most recent call last):
+  File "c:\Users\hadif\pojectt\project490\web_app\app\video_processor.py", line 422, in _init_model
+    self.lstm_model.load_state_dict(checkpoint['model_state_dict'], strict=True)
+  File "C:\Users\hadif\pojectt\project490\.venv\lib\site-packages\torch\nn\modules\module.py", line 2581, in load_state_dict
+    raise RuntimeError(
+RuntimeError: Error(s) in loading state_dict for LSTMPredictor:
+	Missing key(s) in state_dict: "hidden_to_fc.weight", "hidden_to_fc.bias". 
+	size mismatch for lstm.weight_ih_l0: copying a param with shape torch.Size([40, 3]) from checkpoint, the shape in current model is torch.Size([160, 3]).
+	size mismatch for lstm.weight_hh_l0: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([160, 40]).
+	size mismatch for lstm.bias_ih_l0: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+	size mismatch for lstm.bias_hh_l0: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+	size mismatch for lstm.weight_ih_l1: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([160, 40]).
+	size mismatch for lstm.weight_hh_l1: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([160, 40]).
+	size mismatch for lstm.bias_ih_l1: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+	size mismatch for lstm.bias_hh_l1: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "c:\Users\hadif\pojectt\project490\web_app\app\video_processor.py", line 425, in _init_model
+    self.lstm_model.load_state_dict(checkpoint['model_state_dict'], strict=False)
+  File "C:\Users\hadif\pojectt\project490\.venv\lib\site-packages\torch\nn\modules\module.py", line 2581, in load_state_dict
+    raise RuntimeError(
+RuntimeError: Error(s) in loading state_dict for LSTMPredictor:
+	size mismatch for lstm.weight_ih_l0: copying a param with shape torch.Size([40, 3]) from checkpoint, the shape in current model is torch.Size([160, 3]).
+	size mismatch for lstm.weight_hh_l0: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([160, 40]).
+	size mismatch for lstm.bias_ih_l0: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+	size mismatch for lstm.bias_hh_l0: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+	size mismatch for lstm.weight_ih_l1: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([160, 40]).
+	size mismatch for lstm.weight_hh_l1: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([160, 40]).
+	size mismatch for lstm.bias_ih_l1: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+	size mismatch for lstm.bias_hh_l1: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+
+2025-04-23 12:49:54,621 - app.video_processor - ERROR - Error initializing models: Error during initialization: Error(s) in loading state_dict for LSTMPredictor:
+	size mismatch for lstm.weight_ih_l0: copying a param with shape torch.Size([40, 3]) from checkpoint, the shape in current model is torch.Size([160, 3]).
+	size mismatch for lstm.weight_hh_l0: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([160, 40]).
+	size mismatch for lstm.bias_ih_l0: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+	size mismatch for lstm.bias_hh_l0: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+	size mismatch for lstm.weight_ih_l1: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([160, 40]).
+	size mismatch for lstm.weight_hh_l1: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([160, 40]).
+	size mismatch for lstm.bias_ih_l1: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+	size mismatch for lstm.bias_hh_l1: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+2025-04-23 12:49:54,626 - app.video_processor - ERROR - Traceback (most recent call last):
+  File "c:\Users\hadif\pojectt\project490\web_app\app\video_processor.py", line 422, in _init_model
+    self.lstm_model.load_state_dict(checkpoint['model_state_dict'], strict=True)
+  File "C:\Users\hadif\pojectt\project490\.venv\lib\site-packages\torch\nn\modules\module.py", line 2581, in load_state_dict
+    raise RuntimeError(
+RuntimeError: Error(s) in loading state_dict for LSTMPredictor:
+	Missing key(s) in state_dict: "hidden_to_fc.weight", "hidden_to_fc.bias". 
+	size mismatch for lstm.weight_ih_l0: copying a param with shape torch.Size([40, 3]) from checkpoint, the shape in current model is torch.Size([160, 3]).
+	size mismatch for lstm.weight_hh_l0: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([160, 40]).
+	size mismatch for lstm.bias_ih_l0: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+	size mismatch for lstm.bias_hh_l0: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+	size mismatch for lstm.weight_ih_l1: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([160, 40]).
+	size mismatch for lstm.weight_hh_l1: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([160, 40]).
+	size mismatch for lstm.bias_ih_l1: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+	size mismatch for lstm.bias_hh_l1: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "c:\Users\hadif\pojectt\project490\web_app\app\video_processor.py", line 425, in _init_model
+    self.lstm_model.load_state_dict(checkpoint['model_state_dict'], strict=False)
+  File "C:\Users\hadif\pojectt\project490\.venv\lib\site-packages\torch\nn\modules\module.py", line 2581, in load_state_dict
+    raise RuntimeError(
+RuntimeError: Error(s) in loading state_dict for LSTMPredictor:
+	size mismatch for lstm.weight_ih_l0: copying a param with shape torch.Size([40, 3]) from checkpoint, the shape in current model is torch.Size([160, 3]).
+	size mismatch for lstm.weight_hh_l0: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([160, 40]).
+	size mismatch for lstm.bias_ih_l0: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+	size mismatch for lstm.bias_hh_l0: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+	size mismatch for lstm.weight_ih_l1: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([160, 40]).
+	size mismatch for lstm.weight_hh_l1: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([160, 40]).
+	size mismatch for lstm.bias_ih_l1: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+	size mismatch for lstm.bias_hh_l1: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "c:\Users\hadif\pojectt\project490\web_app\app\video_processor.py", line 449, in _init_model
+    raise RuntimeError(f"Error during initialization: {str(e)}")
+RuntimeError: Error during initialization: Error(s) in loading state_dict for LSTMPredictor:
+	size mismatch for lstm.weight_ih_l0: copying a param with shape torch.Size([40, 3]) from checkpoint, the shape in current model is torch.Size([160, 3]).
+	size mismatch for lstm.weight_hh_l0: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([160, 40]).
+	size mismatch for lstm.bias_ih_l0: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+	size mismatch for lstm.bias_hh_l0: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+	size mismatch for lstm.weight_ih_l1: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([160, 40]).
+	size mismatch for lstm.weight_hh_l1: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([160, 40]).
+	size mismatch for lstm.bias_ih_l1: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+	size mismatch for lstm.bias_hh_l1: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+
+2025-04-23 12:49:54,631 - app.video_processor - ERROR - Error during initialization: Error during initialization: Error(s) in loading state_dict for LSTMPredictor:
+	size mismatch for lstm.weight_ih_l0: copying a param with shape torch.Size([40, 3]) from checkpoint, the shape in current model is torch.Size([160, 3]).
+	size mismatch for lstm.weight_hh_l0: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([160, 40]).
+	size mismatch for lstm.bias_ih_l0: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+	size mismatch for lstm.bias_hh_l0: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+	size mismatch for lstm.weight_ih_l1: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([160, 40]).
+	size mismatch for lstm.weight_hh_l1: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([160, 40]).
+	size mismatch for lstm.bias_ih_l1: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+	size mismatch for lstm.bias_hh_l1: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+2025-04-23 12:49:54,636 - app.video_processor - ERROR - Traceback (most recent call last):
+  File "c:\Users\hadif\pojectt\project490\web_app\app\video_processor.py", line 422, in _init_model
+    self.lstm_model.load_state_dict(checkpoint['model_state_dict'], strict=True)
+  File "C:\Users\hadif\pojectt\project490\.venv\lib\site-packages\torch\nn\modules\module.py", line 2581, in load_state_dict
+    raise RuntimeError(
+RuntimeError: Error(s) in loading state_dict for LSTMPredictor:
+	Missing key(s) in state_dict: "hidden_to_fc.weight", "hidden_to_fc.bias". 
+	size mismatch for lstm.weight_ih_l0: copying a param with shape torch.Size([40, 3]) from checkpoint, the shape in current model is torch.Size([160, 3]).
+	size mismatch for lstm.weight_hh_l0: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([160, 40]).
+	size mismatch for lstm.bias_ih_l0: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+	size mismatch for lstm.bias_hh_l0: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+	size mismatch for lstm.weight_ih_l1: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([160, 40]).
+	size mismatch for lstm.weight_hh_l1: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([160, 40]).
+	size mismatch for lstm.bias_ih_l1: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+	size mismatch for lstm.bias_hh_l1: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "c:\Users\hadif\pojectt\project490\web_app\app\video_processor.py", line 425, in _init_model
+    self.lstm_model.load_state_dict(checkpoint['model_state_dict'], strict=False)
+  File "C:\Users\hadif\pojectt\project490\.venv\lib\site-packages\torch\nn\modules\module.py", line 2581, in load_state_dict
+    raise RuntimeError(
+RuntimeError: Error(s) in loading state_dict for LSTMPredictor:
+	size mismatch for lstm.weight_ih_l0: copying a param with shape torch.Size([40, 3]) from checkpoint, the shape in current model is torch.Size([160, 3]).
+	size mismatch for lstm.weight_hh_l0: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([160, 40]).
+	size mismatch for lstm.bias_ih_l0: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+	size mismatch for lstm.bias_hh_l0: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+	size mismatch for lstm.weight_ih_l1: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([160, 40]).
+	size mismatch for lstm.weight_hh_l1: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([160, 40]).
+	size mismatch for lstm.bias_ih_l1: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+	size mismatch for lstm.bias_hh_l1: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "c:\Users\hadif\pojectt\project490\web_app\app\video_processor.py", line 384, in __init__
+    self._init_model()
+  File "c:\Users\hadif\pojectt\project490\web_app\app\video_processor.py", line 449, in _init_model
+    raise RuntimeError(f"Error during initialization: {str(e)}")
+RuntimeError: Error during initialization: Error(s) in loading state_dict for LSTMPredictor:
+	size mismatch for lstm.weight_ih_l0: copying a param with shape torch.Size([40, 3]) from checkpoint, the shape in current model is torch.Size([160, 3]).
+	size mismatch for lstm.weight_hh_l0: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([160, 40]).
+	size mismatch for lstm.bias_ih_l0: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+	size mismatch for lstm.bias_hh_l0: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+	size mismatch for lstm.weight_ih_l1: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([160, 40]).
+	size mismatch for lstm.weight_hh_l1: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([160, 40]).
+	size mismatch for lstm.bias_ih_l1: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+	size mismatch for lstm.bias_hh_l1: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+
+2025-04-23 12:49:54,640 - app - ERROR - Error processing upload: Error during initialization: Error(s) in loading state_dict for LSTMPredictor:
+	size mismatch for lstm.weight_ih_l0: copying a param with shape torch.Size([40, 3]) from checkpoint, the shape in current model is torch.Size([160, 3]).
+	size mismatch for lstm.weight_hh_l0: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([160, 40]).
+	size mismatch for lstm.bias_ih_l0: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+	size mismatch for lstm.bias_hh_l0: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+	size mismatch for lstm.weight_ih_l1: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([160, 40]).
+	size mismatch for lstm.weight_hh_l1: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([160, 40]).
+	size mismatch for lstm.bias_ih_l1: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+	size mismatch for lstm.bias_hh_l1: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+2025-04-23 12:49:54,642 - app - ERROR - Traceback (most recent call last):
+  File "c:\Users\hadif\pojectt\project490\web_app\app\video_processor.py", line 422, in _init_model
+    self.lstm_model.load_state_dict(checkpoint['model_state_dict'], strict=True)
+  File "C:\Users\hadif\pojectt\project490\.venv\lib\site-packages\torch\nn\modules\module.py", line 2581, in load_state_dict
+    raise RuntimeError(
+RuntimeError: Error(s) in loading state_dict for LSTMPredictor:
+	Missing key(s) in state_dict: "hidden_to_fc.weight", "hidden_to_fc.bias". 
+	size mismatch for lstm.weight_ih_l0: copying a param with shape torch.Size([40, 3]) from checkpoint, the shape in current model is torch.Size([160, 3]).
+	size mismatch for lstm.weight_hh_l0: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([160, 40]).
+	size mismatch for lstm.bias_ih_l0: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+	size mismatch for lstm.bias_hh_l0: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+	size mismatch for lstm.weight_ih_l1: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([160, 40]).
+	size mismatch for lstm.weight_hh_l1: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([160, 40]).
+	size mismatch for lstm.bias_ih_l1: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+	size mismatch for lstm.bias_hh_l1: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "c:\Users\hadif\pojectt\project490\web_app\app\video_processor.py", line 425, in _init_model
+    self.lstm_model.load_state_dict(checkpoint['model_state_dict'], strict=False)
+  File "C:\Users\hadif\pojectt\project490\.venv\lib\site-packages\torch\nn\modules\module.py", line 2581, in load_state_dict
+    raise RuntimeError(
+RuntimeError: Error(s) in loading state_dict for LSTMPredictor:
+	size mismatch for lstm.weight_ih_l0: copying a param with shape torch.Size([40, 3]) from checkpoint, the shape in current model is torch.Size([160, 3]).
+	size mismatch for lstm.weight_hh_l0: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([160, 40]).
+	size mismatch for lstm.bias_ih_l0: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+	size mismatch for lstm.bias_hh_l0: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+	size mismatch for lstm.weight_ih_l1: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([160, 40]).
+	size mismatch for lstm.weight_hh_l1: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([160, 40]).
+	size mismatch for lstm.bias_ih_l1: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+	size mismatch for lstm.bias_hh_l1: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "c:\Users\hadif\pojectt\project490\web_app\app\routes.py", line 114, in upload_file
+    processor = VideoProcessor(
+  File "c:\Users\hadif\pojectt\project490\web_app\app\video_processor.py", line 384, in __init__
+    self._init_model()
+  File "c:\Users\hadif\pojectt\project490\web_app\app\video_processor.py", line 449, in _init_model
+    raise RuntimeError(f"Error during initialization: {str(e)}")
+RuntimeError: Error during initialization: Error(s) in loading state_dict for LSTMPredictor:
+	size mismatch for lstm.weight_ih_l0: copying a param with shape torch.Size([40, 3]) from checkpoint, the shape in current model is torch.Size([160, 3]).
+	size mismatch for lstm.weight_hh_l0: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([160, 40]).
+	size mismatch for lstm.bias_ih_l0: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+	size mismatch for lstm.bias_hh_l0: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+	size mismatch for lstm.weight_ih_l1: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([160, 40]).
+	size mismatch for lstm.weight_hh_l1: copying a param with shape torch.Size([40, 10]) from checkpoint, the shape in current model is torch.Size([160, 40]).
+	size mismatch for lstm.bias_ih_l1: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+	size mismatch for lstm.bias_hh_l1: copying a param with shape torch.Size([40]) from checkpoint, the shape in current model is torch.Size([160]).
+
+2025-04-23 12:49:54,651 - werkzeug - INFO - 127.0.0.1 - - [23/Apr/2025 12:49:54] "[35m[1mPOST /upload HTTP/1.1[0m" 500 -
+2025-04-23 12:52:41,721 - werkzeug - INFO -  * Detected change in 'c:\\Users\\hadif\\pojectt\\project490\\web_app\\app\\video_processor.py', reloading
+2025-04-23 12:52:43,228 - werkzeug - INFO -  * Restarting with stat
