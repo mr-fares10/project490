@@ -1,0 +1,3 @@
+Video: c:\Users\hadif\pojectt\project490\web_app\uploads\4ad370df-2dd3-4d2c-a64e-1a955708f0b5\firstjetvideo.mp4
+Model: c:\Users\hadif\pojectt\project490\web_app\uploads\4ad370df-2dd3-4d2c-a64e-1a955708f0b5\jet_lstm_model.pt
+Processed with: F-16, Standard

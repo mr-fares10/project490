@@ -1,0 +1,863 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fighter Jet Position Prediction</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { 
+            background-color: #f5f5f5; 
+            padding-bottom: 50px;
+        }
+        .container { 
+            max-width: 1200px; 
+        }
+        .card { 
+            margin-bottom: 20px; 
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1); 
+            border: none;
+            border-radius: 10px;
+        }
+        .card-header { 
+            background-color: #343a40; 
+            color: white; 
+            border-radius: 10px 10px 0 0 !important;
+            padding: 15px 20px;
+        }
+        .progress { 
+            height: 25px; 
+            border-radius: 5px;
+        }
+        .btn-primary {
+            background-color: #0d6efd;
+            border: none;
+        }
+        .btn-primary:hover {
+            background-color: #0b5ed7;
+        }
+        .result-btn {
+            width: 100%;
+            margin-bottom: 10px;
+            text-align: left;
+            padding: 10px 15px;
+            transition: all 0.3s;
+        }
+        .result-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .result-icon {
+            width: 24px;
+            text-align: center;
+            margin-right: 10px;
+        }
+        #preview-container {
+            text-align: center;
+            margin-top: 20px;
+            display: none;
+        }
+        #preview-image {
+            max-width: 100%;
+            border-radius: 5px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+        .result-section {
+            margin-bottom: 30px;
+        }
+        .stats-card {
+            background-color: #f8f9fa;
+            border-left: 5px solid #0d6efd;
+            padding: 15px;
+            margin-bottom: 10px;
+        }
+        
+        /* Hero section with video background */
+        .hero-section {
+            position: relative;
+            height: 100vh;
+            min-height: 500px;
+            max-height: 800px;
+            color: white;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 40px;
+        }
+        
+        .video-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: -2;
+        }
+        
+        .video-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            z-index: -1;
+        }
+        
+        /* Jet animation */
+        .jet-animation {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: 0;
+            pointer-events: none;
+        }
+        
+        /* Simplified jet animation without disappearing */
+        @keyframes fly {
+            0% {
+                left: -10%;
+                transform: translateY(0) rotate(0deg);
+            }
+            10% {
+                transform: translateY(-20px) rotate(5deg);
+            }
+            20% {
+                transform: translateY(-50px) rotate(-5deg);
+            }
+            40% {
+                transform: translateY(-10px) rotate(0deg);
+            }
+            60% {
+                transform: translateY(-40px) rotate(10deg);
+            }
+            80% {
+                transform: translateY(0) rotate(-10deg);
+            }
+            100% {
+                left: 110%;
+                transform: translateY(0) rotate(0deg);
+            }
+        }
+
+        /* Simplified missile animation without disappearing */
+        @keyframes missile {
+            0% {
+                left: -5%;
+                opacity: 0;
+            }
+            5% {
+                opacity: 1;
+            }
+            100% {
+                left: 110%;
+                opacity: 1;
+            }
+        }
+
+        /* Jet styling */
+        .jet {
+            position: absolute;
+            width: 160px;
+            height: 80px;
+            animation: fly 15s linear infinite;
+        }
+
+        /* Missile styling */
+        .missile {
+            position: absolute;
+            width: 60px;
+            height: 16px;
+            background-image: url('/examples/missile.png');
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            animation: missile 10s linear infinite; /* Faster animation */
+            opacity: 0;
+        }
+
+        /* Timing for jets and missiles */
+        #jet1 { animation-delay: 0s; }
+        #jet2 { animation-delay: 8s; }
+        #jet3 { animation-delay: 16s; }
+
+        #missile1 { animation-delay: 1s; }
+        #missile2 { animation-delay: 9s; }
+        #missile3 { animation-delay: 17s; }
+
+        /* Remove animation from explosion elements - will be controlled by JS */
+        .explosion {
+            position: absolute;
+            width: 0px;
+            height: 0px;
+            left: 60%;
+            background-image: url('/examples/explosion.png');
+            background-size: cover;
+            opacity: 0;
+            transform: translate(-50%, -50%);
+            z-index: 10;
+            border-radius: 50%;
+        }
+        
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+            padding: 0 20px;
+        }
+        
+        .hero-title {
+            font-size: 3.5rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            margin-bottom: 20px;
+        }
+        
+        .hero-subtitle {
+            font-size: 1.5rem;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+            margin-bottom: 30px;
+        }
+        
+        /* Video examples cards styling */
+        .video-example-card {
+            transition: transform 0.3s ease;
+        }
+        
+        .video-example-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        /* About section */
+        .about-section {
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('/examples/about-background.jpg');
+            background-size: cover;
+            background-position: center;
+            color: white;
+            padding: 80px 0;
+            margin-top: 60px;
+        }
+        
+        .about-content {
+            background-color: rgba(0, 0, 0, 0.6);
+            padding: 30px;
+            border-radius: 10px;
+        }
+        
+        .about-title {
+            font-size: 2.5rem;
+            margin-bottom: 30px;
+            position: relative;
+            padding-bottom: 15px;
+        }
+        
+        .about-title:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100px;
+            height: 3px;
+            background-color: #0d6efd;
+        }
+        
+        /* Mobile responsiveness */
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 2.5rem;
+            }
+            
+            .hero-subtitle {
+                font-size: 1.2rem;
+            }
+            
+            .hero-section {
+                height: 70vh;
+            }
+            
+            .jet {
+                width: 120px; /* Still larger than original but slightly smaller for mobile */
+                height: 60px;
+            }
+            
+            .missile {
+                width: 45px;
+                height: 12px;
+            }
+            
+            .explosion {
+                max-width: 200px;
+                max-height: 200px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Hero Section with Video Background and Explosions -->
+    <div class="hero-section">
+        <!-- Video Background -->
+        <video class="video-bg" autoplay muted loop playsinline>
+            <source src="/examples/fighter-jet-background.mp4" type="video/mp4">
+            <!-- Fallback background image if video doesn't load -->
+            <img src="/examples/hero-background.jpg" alt="Fighter Jet Background" style="width: 100%; height: 100%; object-fit: cover;">
+        </video>
+        <div class="video-overlay"></div>
+        
+        <!-- Animated Jets and Missiles with Explosions -->
+        <div class="jet-animation">
+            <!-- First set of jet and missile -->
+            <img src="/examples/fighter-jet.png" alt="Fighter Jet" class="jet" id="jet1" style="top: 40%;">
+            <img src="/examples/missile.png" alt="Missile" class="missile" id="missile1" style="top: 40%;">
+            <div class="explosion" id="explosion1" style="top: 40%;"></div>
+            
+            <!-- Second set of jet and missile -->
+            <img src="/examples/fighter-jet.png" alt="Fighter Jet" class="jet" id="jet2" style="animation-delay: 8s; top: 50%;">
+            <img src="/examples/missile.png" alt="Missile" class="missile" id="missile2" style="top: 50%;">
+            <div class="explosion" id="explosion2" style="top: 50%;"></div>
+            
+            <!-- Third set of jet and missile -->
+            <img src="/examples/fighter-jet.png" alt="Fighter Jet" class="jet" id="jet3" style="animation-delay: 16s; top: 60%;">
+            <img src="/examples/missile.png" alt="Missile" class="missile" id="missile3" style="top: 60%;">
+            <div class="explosion" id="explosion3" style="top: 60%;"></div>
+        </div>
+        
+        <div class="hero-content">
+            <h1 class="hero-title">Fighter Jet Trajectory Prediction</h1>
+            <p class="hero-subtitle">Advanced AI-powered tracking and position prediction system</p>
+            <a href="#upload-section" class="btn btn-primary btn-lg">Start Processing</a>
+        </div>
+    </div>
+
+    <div class="container">
+       
+            
+           
+        <!-- Upload Section -->
+        <div id="upload-section" class="row">
+            <div class="col-12 text-center mb-4">
+                <h2>Process Your Video</h2>
+                <p class="lead">Upload your video for advanced processing and trajectory prediction</p>
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-header">
+                <h5><i class="fas fa-upload me-2"></i>Upload Video</h5>
+            </div>
+            <div class="card-body p-4">
+                <form id="uploadForm">
+                    <div class="mb-3">
+                        <label for="videoFile" class="form-label">Select Video File</label>
+                        <input type="file" class="form-control" id="videoFile" name="video" accept=".mp4,.avi,.mov" required>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="modelFile" class="form-label">LSTM Model File (Optional)</label>
+                        <input type="file" class="form-control" id="modelFile" name="model" accept=".pt,.pth">
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-4 mb-3">
+                            <label for="jetType" class="form-label">Jet Type</label>
+                            <select class="form-select" id="jetType" name="jet_type">
+                                <option value="F-16">F-16 Fighting Falcon</option>
+                                <option value="F-18">F/A-18 Hornet</option>
+                                <option value="F-22">F-22 Raptor</option>
+                                <option value="F-35">F-35 Lightning II</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label for="cameraModel" class="form-label">Camera Model</label>
+                            <select class="form-select" id="cameraModel" name="camera_model">
+                                <option value="Standard">Standard</option>
+                                <option value="High-Speed">High-Speed</option>
+                                <option value="Tracking">Tracking</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label for="focalLength" class="form-label">Focal Length (mm)</label>
+                            <input type="number" class="form-control" id="focalLength" name="focal_length" value="200" min="10" max="1000">
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary" id="uploadBtn">
+                        <i class="fas fa-paper-plane me-2"></i>Upload & Process
+                    </button>
+                </form>
+                
+                <div id="loadingContainer" style="display:none;">
+                    <div class="progress mt-4">
+                        <div class="progress-bar progress-bar-striped progress-bar-animated" id="progressBar" role="progressbar" style="width: 0%"></div>
+                    </div>
+                    <p class="text-center mt-2" id="statusMessage">Initializing processing...</p>
+                    
+                    <div id="preview-container">
+                        <h5 class="mt-4 mb-3">Processing Preview</h5>
+                        <img id="preview-image" src="" alt="Processing preview">
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card mt-4" id="resultsContainer" style="display:none;">
+            <div class="card-header">
+                <h5><i class="fas fa-chart-line me-2"></i>Results</h5>
+            </div>
+            <div class="card-body p-4">
+                <div id="resultsContent">
+                    <!-- Results will be shown here -->
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- About Section -->
+    <div class="about-section" id="about">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 offset-lg-2">
+                    <div class="about-content">
+                        <h2 class="about-title">About This Project</h2>
+                        <p>The Fighter Jet Position Prediction system is an advanced computer vision and machine learning application designed to track and predict the trajectory of fighter aircraft in video footage. Using a combination of object detection, segmentation, and LSTM neural networks, the system can accurately identify aircraft, track their movements, and predict their future positions in 3D space.</p>
+                        
+                        <p>Key features of this system include:</p>
+                        <ul>
+                            <li>Real-time aircraft detection and tracking</li>
+                            <li>3D position estimation using camera parameters</li>
+                            <li>LSTM-based trajectory prediction</li>
+                            <li>Visualization of actual vs. predicted flight paths</li>
+                            <li>Support for different fighter jet models and camera configurations</li>
+                        </ul>
+                        
+                        <p>This technology has applications in defense systems, aerospace engineering, and aviation safety. It can be used for training purposes, performance analysis, and enhancing situational awareness in various contexts.</p>
+                        
+                        <div class="mt-4">
+                            <a href="#upload-section" class="btn btn-primary me-3">Try It Now</a>
+                            <a href="https://github.com/username/fighter-jet-prediction" target="_blank" class="btn btn-outline-light">
+                                <i class="fab fa-github me-2"></i>GitHub Repository
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Ensure all videos autoplay
+            const videos = document.querySelectorAll('video');
+            videos.forEach(video => {
+                // Start playing
+                video.play().catch(error => {
+                    console.log('Autoplay prevented: ', error);
+                    
+                    // Create play button for browsers that block autoplay
+                    if (!video.hasAttribute('data-play-button-added')) {
+                        const playButton = document.createElement('button');
+                        playButton.innerHTML = '<i class="fas fa-play fa-3x"></i>';
+                        playButton.className = 'video-play-button';
+                        playButton.style.position = 'absolute';
+                        playButton.style.top = '50%';
+                        playButton.style.left = '50%';
+                        playButton.style.transform = 'translate(-50%, -50%)';
+                        playButton.style.background = 'rgba(0,0,0,0.6)';
+                        playButton.style.color = 'white';
+                        playButton.style.border = 'none';
+                        playButton.style.borderRadius = '50%';
+                        playButton.style.width = '80px';
+                        playButton.style.height = '80px';
+                        playButton.style.cursor = 'pointer';
+                        playButton.style.zIndex = '100';
+                        
+                        playButton.addEventListener('click', function() {
+                            video.play();
+                            this.style.display = 'none';
+                        });
+                        
+                        video.parentNode.style.position = 'relative';
+                        video.parentNode.appendChild(playButton);
+                        video.setAttribute('data-play-button-added', 'true');
+                    }
+                });
+            });
+            
+            // Handle page visibility changes to restart videos
+            document.addEventListener('visibilitychange', function() {
+                if (document.visibilityState === 'visible') {
+                    videos.forEach(video => {
+                        if (video.paused) {
+                            video.play().catch(e => console.log('Could not restart video: ', e));
+                        }
+                    });
+                }
+            });
+            
+            // Set up the explosion effects
+            function setupExplosions() {
+              // Define elements
+              const jets = [
+                document.getElementById('jet1'),
+                document.getElementById('jet2'),
+                document.getElementById('jet3')
+              ];
+              
+              const missiles = [
+                document.getElementById('missile1'),
+                document.getElementById('missile2'),
+                document.getElementById('missile3')
+              ];
+              
+              const explosions = [
+                document.getElementById('explosion1'),
+                document.getElementById('explosion2'),
+                document.getElementById('explosion3')
+              ];
+              
+              // Set initial styles for explosions
+              explosions.forEach(explosion => {
+                explosion.style.opacity = '0';
+                explosion.style.width = '0px';
+                explosion.style.height = '0px';
+                explosion.style.position = 'absolute';
+                explosion.style.backgroundImage = 'url("/examples/explosion.png")';
+                explosion.style.backgroundSize = 'cover';
+                explosion.style.borderRadius = '50%';
+                explosion.style.transform = 'translate(-50%, -50%)';
+                explosion.style.zIndex = '10';
+                explosion.style.transition = 'all 0.5s ease-out';
+              });
+              
+              // Define explosion positions (left percentage)
+              const explosionPosition = '60%';
+              
+              // Function to create explosion
+              function createExplosion(index, delay) {
+                setTimeout(() => {
+                  // Set position for explosion
+                  explosions[index].style.left = explosionPosition;
+                  
+                  // Hide jet and missile
+                  jets[index].style.opacity = '0';
+                  missiles[index].style.opacity = '0';
+                  
+                  // Show explosion
+                  explosions[index].style.opacity = '1';
+                  explosions[index].style.width = '250px';
+                  explosions[index].style.height = '250px';
+                  
+                  // Hide explosion after animation completes
+                  setTimeout(() => {
+                    explosions[index].style.opacity = '0';
+                    explosions[index].style.width = '0px';
+                    explosions[index].style.height = '0px';
+                    
+                    // Show jet and missile again for next cycle
+                    setTimeout(() => {
+                      jets[index].style.opacity = '1';
+                      missiles[index].style.opacity = '1';
+                    }, 500);
+                  }, 1000);
+                }, delay);
+              }
+              
+              // Create explosions with different timings
+              createExplosion(0, 5000);  // First explosion after 5 seconds
+              createExplosion(1, 13000); // Second explosion after 13 seconds
+              createExplosion(2, 21000); // Third explosion after 21 seconds
+              
+              // Repeat explosions every 25 seconds
+              setInterval(() => {
+                createExplosion(0, 0);
+                createExplosion(1, 8000);
+                createExplosion(2, 16000);
+              }, 25000);
+            }
+            
+            // Call the setup function
+            setupExplosions();
+            
+            // Video fallback handling
+            const videoBg = document.querySelector('.video-bg');
+            videoBg.addEventListener('error', function() {
+                console.log('Video failed to load, using fallback image');
+                const heroSection = document.querySelector('.hero-section');
+                heroSection.style.backgroundImage = 'url("/examples/hero-background.jpg")';
+                heroSection.style.backgroundSize = 'cover';
+                heroSection.style.backgroundPosition = 'center';
+            });
+            
+            const uploadForm = document.getElementById('uploadForm');
+            const uploadBtn = document.getElementById('uploadBtn');
+            const loadingContainer = document.getElementById('loadingContainer');
+            const progressBar = document.getElementById('progressBar');
+            const statusMessage = document.getElementById('statusMessage');
+            const resultsContainer = document.getElementById('resultsContainer');
+            const previewContainer = document.getElementById('preview-container');
+            const previewImage = document.getElementById('preview-image');
+            
+            // Global variable to store current job ID
+            let currentJobId = null;
+            let previewInterval = null;
+            let statusInterval = null;
+            
+            uploadForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                // Clear previous results
+                if (statusInterval) clearInterval(statusInterval);
+                if (previewInterval) clearInterval(previewInterval);
+                resultsContainer.style.display = 'none';
+                
+                // Prepare form data
+                const formData = new FormData();
+                
+                // Add video file
+                const videoFile = document.getElementById('videoFile').files[0];
+                if (!videoFile) {
+                    alert('Please select a video file');
+                    return;
+                }
+                formData.append('video', videoFile);
+                
+                // Add model file
+                const modelFile = document.getElementById('modelFile').files[0];
+                if (modelFile){
+                    formData.append('model', modelFile);
+                }
+                
+                // Add other parameters
+                formData.append('jet_type', document.getElementById('jetType').value);
+                formData.append('camera_model', document.getElementById('cameraModel').value);
+                formData.append('focal_length', document.getElementById('focalLength').value);
+                
+                // Disable upload button and show loading
+                uploadBtn.disabled = true;
+                loadingContainer.style.display = 'block';
+                progressBar.style.width = '0%';
+                statusMessage.textContent = 'Uploading video...';
+                previewContainer.style.display = 'none';
+                
+                // Submit to API
+                fetch('/api/upload', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! Status: ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    console.log('Upload response:', data);
+                    if (data.status === 'success') {
+                        // Store job ID and start polling
+                        currentJobId = data.job_id;
+                        statusMessage.textContent = 'Processing started. This may take a few minutes...';
+                        pollJobStatus(currentJobId);
+                        pollPreviewImage(currentJobId);
+                    } else {
+                        alert('Upload failed: ' + (data.message || 'Unknown error'));
+                        uploadBtn.disabled = false;
+                        loadingContainer.style.display = 'none';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Upload failed: ' + error.message);
+                    uploadBtn.disabled = false;
+                    loadingContainer.style.display = 'none';
+                });
+            });
+
+            function pollJobStatus(jobId) {
+                // Clear any existing interval
+                if (statusInterval) clearInterval(statusInterval);
+                
+                // Check job status every 3 seconds
+                statusInterval = setInterval(() => {
+                    fetch(`/api/status/${jobId}`)
+                        .then(response => {
+                            if (!response.ok) {
+                                throw new Error(`HTTP error! Status: ${response.status}`);
+                            }
+                            return response.json();
+                        })
+                        .then(data => {
+                            console.log('Status response:', data);
+                            
+                            // Update progress
+                            const progress = data.progress || 0;
+                            progressBar.style.width = `${progress}%`;
+                            progressBar.setAttribute('aria-valuenow', progress);
+                            statusMessage.textContent = `Processing: ${Math.round(progress)}% complete`;
+                            
+                            if (data.status === 'completed') {
+                                clearInterval(statusInterval);
+                                clearInterval(previewInterval);
+                                statusMessage.textContent = 'Processing completed successfully!';
+                                progressBar.style.width = '100%';
+                                displayResults(jobId, data.results);
+                                uploadBtn.disabled = false;
+                            } else if (data.status === 'failed') {
+                                clearInterval(statusInterval);
+                                clearInterval(previewInterval);
+                                alert(`Processing failed: ${data.error || 'Unknown error'}`);
+                                statusMessage.textContent = 'Processing failed.';
+                                uploadBtn.disabled = false;
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error checking status:', error);
+                            statusMessage.textContent = `Error checking status: ${error.message}`;
+                        });
+                }, 3000);
+            }
+            
+            function pollPreviewImage(jobId) {
+                // Clear any existing interval
+                if (previewInterval) clearInterval(previewInterval);
+                
+                // Check for preview images every 5 seconds
+                previewInterval = setInterval(() => {
+                    fetch(`/api/preview/${jobId}`)
+                        .then(response => {
+                            if (!response.ok) {
+                                throw new Error(`HTTP error! Status: ${response.status}`);
+                            }
+                            return response.json();
+                        })
+                        .then(data => {
+                            if (data.preview_available) {
+                                previewContainer.style.display = 'block';
+                                // Add timestamp to prevent caching
+                                const timestamp = new Date().getTime();
+                                previewImage.src = `/api/results/${jobId}/${data.preview_path}?t=${timestamp}`;
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error checking preview:', error);
+                        });
+                }, 5000);
+            }
+
+            function displayResults(jobId, results) {
+                // Show results container
+                resultsContainer.style.display = 'block';
+                
+                // Build results content with more information and better styling
+                const resultsContent = document.getElementById('resultsContent');
+                
+                // Add video info section
+                let videoInfoHTML = '';
+                if (results.video_info) {
+                    const info = results.video_info;
+                    videoInfoHTML = `
+                        <div class="alert alert-secondary">
+                            <strong>Video Information:</strong> ${info.width}x${info.height} resolution, 
+                            ${info.fps.toFixed(2)} FPS, ${info.total_frames} frames
+                        </div>
+                    `;
+                }
+                
+                // Prediction stats section
+                let statsHTML = '';
+                if (results.prediction_stats) {
+                    const stats = results.prediction_stats;
+                    statsHTML = `
+                        <div class="col-12 mb-4">
+                            <h4 class="mb-3">Prediction Statistics</h4>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="stats-card">
+                                        <h5 class="text-primary">Average Error</h5>
+                                        <h3>${stats.avg_error.toFixed(2)} meters</h3>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="stats-card">
+                                        <h5 class="text-danger">Maximum Error</h5>
+                                        <h3>${stats.max_error.toFixed(2)} meters</h3>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="stats-card">
+                                        <h5 class="text-success">Minimum Error</h5>
+                                        <h3>${stats.min_error.toFixed(2)} meters</h3>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }
+                
+                // Main results content
+                resultsContent.innerHTML = `
+                    ${videoInfoHTML}
+                    <div class="row">
+                        ${statsHTML}
+                        
+                        <div class="col-md-6 result-section">
+                            <h4 class="mb-3">Processed Videos</h4>
+                            <a href="/api/results/${jobId}/${results.files.main_video}" class="btn btn-primary result-btn" download>
+                                <span class="result-icon"><i class="fas fa-video"></i></span> Download Original Video
+                            </a>
+                            <a href="/api/results/${jobId}/${results.files.segmentation_video}" class="btn btn-success result-btn" download>
+                                <span class="result-icon"><i class="fas fa-film"></i></span> Download Segmentation with Predictions
+                            </a>
+                            <a href="/api/results/${jobId}/${results.files.summary}" class="btn btn-info result-btn" download>
+                                <span class="result-icon"><i class="fas fa-file-alt"></i></span> Download Processing Summary
+                            </a>
+                            <a href="/api/results/${jobId}/${results.files.trajectory_csv}" class="btn btn-secondary result-btn" download>
+                                <span class="result-icon"><i class="fas fa-table"></i></span> Download Trajectory Data (CSV)
+                            </a>
+                        </div>
+                        
+                        <div class="col-md-6 result-section">
+                            <h4 class="mb-3">Analysis Visualizations</h4>
+                            <a href="/api/results/${jobId}/${results.files.trajectory_3d}" class="btn btn-warning result-btn" download>
+                                <span class="result-icon"><i class="fas fa-cube"></i></span> Download 3D Trajectory Plot
+                            </a>
+                            <a href="/api/results/${jobId}/${results.files.trajectory_2d}" class="btn btn-warning result-btn" download>
+                                <span class="result-icon"><i class="fas fa-project-diagram"></i></span> Download 2D Trajectory Views
+                            </a>
+                            <a href="/api/results/${jobId}/${results.files.error_graph}" class="btn btn-danger result-btn" download>
+                                <span class="result-icon"><i class="fas fa-chart-line"></i></span> Download Prediction Error Graph
+                            </a>
+                        </div>
+                        
+                        <div class="col-12 mt-4">
+                            <div class="card">
+                                <div class="card-header bg-success text-white">
+                                    <h5>Processing Complete</h5>
+                                </div>
+                                <div class="card-body">
+                                    <p>All processing tasks have been completed successfully. You can download the results using the links above.</p>
+                                    <p>Job ID: <code>${jobId}</code></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+            
+            // Smooth scroll for anchor links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    
+                    document.querySelector(this.getAttribute('href')).scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                });
+            });
+        });
+    </script>
+</body>
+</html>

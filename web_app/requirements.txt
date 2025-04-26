@@ -1,0 +1,19 @@
+# Web Framework
+fastapi==0.103.2
+uvicorn==0.23.2
+python-multipart==0.0.9
+jinja2==3.1.3
+aiofiles==23.2.1
+
+# Data processing
+numpy>=1.21.6
+opencv-python>=4.5.3.56
+pandas>=1.3.3
+scikit-learn==1.0.2
+
+# Machine Learning
+tensorflow>=2.8.0  # Only if you need TensorFlow (based on your models.py)
+
+# Utilities
+python-dotenv==1.0.0
+requests==2.31.0

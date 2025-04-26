@@ -1,0 +1,19 @@
+Processing Summary
+==================
+Video: firstjetvideo.mp4
+Resolution: 1920x1080
+FPS: 30.0
+Total Frames: 317
+Fighter Jet Type: F-16 Fighting Falcon
+Camera Model: Sony Alpha 7R IV
+Focal Length: 200.0mm
+
+Detection Results
+----------------
+Total Detections: 0
+Detection Rate: 0.0%
+
+Prediction Results
+-----------------
+Total Predictions: 0
+Prediction Rate: 0.0%

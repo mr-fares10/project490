@@ -1,0 +1,5 @@
+Video: C:\Users\hadif\pojectt\project490\web_app\uploads\3ff45396-003f-443d-a69a-0d4156afd47d\firstjetvideo.mp4
+Model: C:\Users\hadif\pojectt\project490\web_app\app\models\jet_lstm_model.pt
+Jet Type: F-16
+Camera Model: Standard
+Focal Length: 200.0

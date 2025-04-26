@@ -1,0 +1,22 @@
+Fighter Jet Position Prediction - Processing Summary
+==================================================
+
+Video File: firstjetvideo.mp4
+Model: jet_lstm_model.pt
+Jet Type: F-16
+Camera Model: Standard
+Focal Length: 200.0mm
+
+Video Properties:
+- Resolution: 1920x1080
+- Frame Rate: 30.0 fps
+- Duration: 10.57 seconds
+- Total Frames: 317
+
+Output Files:
+- output_annotated.mp4: Video with position annotations
+- output_heatmap.mp4: Heatmap visualization
+- trajectory_data.csv: Position data for each frame
+- frames/: Directory with sample frame images
+
+Processing completed successfully.

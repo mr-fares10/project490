@@ -1,0 +1,17 @@
+FIGHTER JET LSTM PREDICTION SUMMARY
+==================================
+
+Date: 2025-04-24 18:51:23
+Video: fj16.mp4
+Frames processed: 290
+LSTM model: None
+
+OUTPUT FILES
+- output_annotated.mp4: Original video
+- segmentation_with_predictions.mp4: Video with aircraft detection and predictions
+- trajectory_with_predictions.csv: CSV file with trajectory data
+- position_prediction_results.csv: Detailed results data
+- trajectory_comparison_3d.png: 3D visualization of trajectories
+- trajectory_comparison_2d.png: 2D visualizations of trajectories
+- prediction_error.png: Graph of prediction error over time
+- frames/: Directory with sample frame images
